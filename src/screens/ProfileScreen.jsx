@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import Constants from "expo-constants";
+import { StyleSheet, View, Text } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
 import ProfileHeader from "../components/ProfileHeader";
@@ -9,12 +8,12 @@ export default class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: this.props.route.params.item.itemList
+      items: this.props?.route?.params?.item?.itemList || null
     };
   }
 
   renderItems = () => {
-    if (!this.state.items.length) {
+    if (!this.state?.items?.length) {
       return (
         <View style={styles.noItem}>
           <FontAwesome
@@ -50,7 +49,11 @@ export default class ProfileScreen extends Component {
   };
 
   render() {
-    return (
+    return !this.state.items ? (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>MY PROFILE</Text>
+      </View>
+    ) : (
       <View style={{ flex: 1 }}>
         <ProfileHeader {...this.props.route.params}></ProfileHeader>
         {this.renderItems()}

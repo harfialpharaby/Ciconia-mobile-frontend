@@ -47,7 +47,7 @@ export function userLogin({ email, password }) {
         let json = await response.json();
         AsyncStorage.setItem("userToken", json.token);
         AsyncStorage.setItem("name", json.name);
-        AsyncStorage.setItem("point", json.point);
+        AsyncStorage.setItem("point", json.point.toString());
 
         dispatch({ type: SIGN_IN, token: json.token });
       } else {

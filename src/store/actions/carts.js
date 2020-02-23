@@ -22,8 +22,12 @@ export function fetchCartList() {
       });
       if (response.ok) {
         const carts = await response.json();
+        let normalizedCarts = [];
+        for (const key in carts) {
+          normalizedCarts.push(...carts[key]);
+        }
 
-        dispatch({ type: FETCH_CART_SUCCESS, carts });
+        dispatch({ type: FETCH_CART_SUCCESS, carts: normalizedCarts });
       } else {
         dispatch({ type: FETCH_CART_FAIL });
       }

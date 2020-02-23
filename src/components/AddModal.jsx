@@ -3,7 +3,6 @@ import {
   Modal,
   View,
   ScrollView,
-  Button,
   TextInput,
   Image,
   Text,
@@ -75,14 +74,14 @@ export default function AddModal(props) {
     ) {
       Alert.alert("ALERT!", "Please fill all data in order to save!");
     } else {
-      // setNewItem({
-      //   name: "",
-      //   price: "",
-      //   quantity: 1,
-      //   image: null,
-      //   city: "",
-      //   country: ""
-      // });
+      setNewItem({
+        name: "",
+        price: "",
+        quantity: 1,
+        image: null,
+        city: "",
+        country: ""
+      });
       setVisible(false);
       addItem(newItem);
     }

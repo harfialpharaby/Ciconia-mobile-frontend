@@ -38,11 +38,16 @@ export default function TravelCard(props) {
         marginBottom: 15
       }}
     >
-      <View style={{ flex: 0.2, justifyContent: "center" }}>
+      <TouchableOpacity
+        style={{ flex: 0.2, justifyContent: "center" }}
+        onPress={() =>
+          navigation.navigate("TravelerScreen", { item, randomColor })
+        }
+      >
         <View style={[styles.aliasBg, { backgroundColor: randomColor }]}>
           <Text style={styles.aliasText}>{aliasName.toUpperCase()}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
       <View style={[styles.triangleCorner]} />
       <TouchableOpacity
         style={styles.content}

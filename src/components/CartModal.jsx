@@ -6,9 +6,14 @@ import {
   Text,
   Image,
   ImageBackground,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TouchableOpacity
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import {
+  Feather,
+  FontAwesome,
+  MaterialCommunityIcons
+} from "@expo/vector-icons";
 
 export default function CartModal(props) {
   const { showModal, setShowModal, item, setShowDetail, statuses } = props;
@@ -29,65 +34,123 @@ export default function CartModal(props) {
 
     return statuses.map((status, index) => {
       return (
-        <View style={{ width: 54, alignItems: "center" }} key={status.key}>
-          {index <= doneIndex ? (
-            <Feather name="check-circle" size={25} color="green"></Feather>
+        <View style={{ width: 55, alignItems: "center" }} key={status.key}>
+          {index < doneIndex ? (
+            <Feather name="check-circle" size={25} color="#2ecc71"></Feather>
+          ) : index === doneIndex && index < statuses.length ? (
+            <TouchableOpacity>
+              <FontAwesome
+                name="circle"
+                size={25}
+                color="#f1c40f"
+              ></FontAwesome>
+            </TouchableOpacity>
           ) : (
-            <Feather name="circle" size={25} color="grey"></Feather>
+            <Feather name="circle" size={25} color="#7f8c8d"></Feather>
           )}
-          <Text style={{ textAlign: "center", fontSize: 11 }}>
-            {status.name}
-          </Text>
+          <Text style={styles.statusName}>{status.name}</Text>
         </View>
       );
     });
   };
 
+  const renderHeader = () => {
+    return (
+      <View style={{ flex: 0.13, paddingTop: 20, width: "100%" }}>
+        <View style={styles.headerTitleBg}>
+          <Text style={styles.headerTitle}>{item.itemId.name}</Text>
+          <Text style={{ color: "white" }}> x{item.quantity}</Text>
+        </View>
+        <View style={styles.headerSubBackground}>
+          <Text style={styles.headerSubForeground}>
+            {item.travelId.userId.name + " "}
+            <Text style={{ fontWeight: "normal", textTransform: "none" }}>
+              will buy this item for you from
+            </Text>
+            {" " + item.itemId.location}
+          </Text>
+        </View>
+        <View style={styles.itemStatusBg}>
+          {item.itemId.status === "travel" ? (
+            <FontAwesome name="send" size={25} color="white"></FontAwesome>
+          ) : (
+            <MaterialCommunityIcons
+              name="shopping"
+              size={25}
+              color="white"
+            ></MaterialCommunityIcons>
+          )}
+        </View>
+      </View>
+    );
+  };
+
   return (
     <Modal animationType="none" transparent={true} visible={showModal}>
       <TouchableWithoutFeedback onPress={hideDetail}>
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <View
-            style={{
-              flex: 0.7,
-              width: "95%",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <View
-              style={{
-                flex: 0.1,
-                alignItems: "flex-end",
-                flexDirection: "row",
-                marginBottom: 5
-              }}
-            >
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  textTransform: "capitalize"
-                }}
-              >
-                {item.itemId.name}
-              </Text>
-              <Text> x{item.quantity}</Text>
-            </View>
-            <Image
+        <View style={styles.background}>
+          <View style={styles.foreground}>
+            {renderHeader()}
+            <ImageBackground
               source={{ uri: item.itemId.image }}
-              style={{ flex: 0.7, width: "100%" }}
+              style={{ flex: 0.87, width: "100%" }}
               resizeMode="contain"
-            ></Image>
-            <View style={{ flex: 0.2, marginTop: 10, flexDirection: "row" }}>
+            ></ImageBackground>
+            <View style={{ flex: 0.1, marginBottom: 10, flexDirection: "row" }}>
               {renderCurrentStatus()}
             </View>
-            {/* <Text>{JSON.stringify(item)}</Text> */}
           </View>
         </View>
       </TouchableWithoutFeedback>
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  background: { flex: 1, alignItems: "center", justifyContent: "center" },
+  foreground: {
+    flex: 0.8,
+    width: "95%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    backgroundColor: "#2f3640",
+    paddingBottom: 10
+  },
+  statusName: {
+    textAlign: "center",
+    fontSize: 11,
+    color: "white",
+    textTransform: "capitalize"
+  },
+  headerTitleBg: {
+    flex: 0.5,
+    alignItems: "baseline",
+    flexDirection: "row"
+  },
+  headerTitle: {
+    fontWeight: "bold",
+    fontSize: 20,
+    textTransform: "capitalize",
+    color: "white",
+    marginLeft: 10,
+    letterSpacing: 1
+  },
+  headerSubBackground: {
+    flex: 0.5,
+    width: "100%",
+    alignSelf: "flex-start"
+  },
+  headerSubForeground: {
+    fontWeight: "bold",
+    letterSpacing: 0.5,
+    textTransform: "capitalize",
+    color: "white",
+    marginLeft: 10
+  },
+  itemStatusBg: {
+    position: "absolute",
+    right: 10,
+    top: 10
+  }
+});

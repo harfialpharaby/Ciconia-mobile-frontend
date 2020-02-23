@@ -7,7 +7,8 @@ import {
   FlatList,
   Keyboard,
   Platform,
-  Dimensions
+  Dimensions,
+  Modal
 } from "react-native";
 import { debounce } from "lodash";
 import { AntDesign } from "@expo/vector-icons";
@@ -209,11 +210,22 @@ export default class AddTripScreen extends Component {
               POST TRIP
             </Text>
           </TouchableOpacity>
-          <AddModal
+          {/* <AddModal
             visible={this.state.showAddItem}
             setVisible={showAddItem => this.setState({ showAddItem })}
             addItem={item => this.addItem(item)}
-          ></AddModal>
+          ></AddModal> */}
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={this.state.showAddItem}
+            presentationStyle="overFullScreen"
+          >
+            <AddModal
+              setVisible={showAddItem => this.setState({ showAddItem })}
+              addItem={item => this.addItem(item)}
+            ></AddModal>
+          </Modal>
         </View>
       </TouchableWithoutFeedback>
     );

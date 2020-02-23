@@ -13,26 +13,8 @@ export default function AddNavigation(props) {
   return (
     <View style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
       <Tab.Navigator tabBarOptions={{ pressColor: "#00adee" }}>
-        <Tab.Screen
-          name="Trip"
-          component={AddTripScreen}
-          options={{
-            tabBarLabel: "Trip",
-            tabBarIcon: ({ color, size }) => (
-              <FontAwesome name="plane" color={color} size={size} />
-            )
-          }}
-        />
-        <Tab.Screen
-          name="Request"
-          component={AddRequestScreen}
-          options={{
-            tabBarLabel: "Request",
-            tabBarIcon: ({ color, size }) => (
-              <Entypo name="suitcase" color={color} size={size} />
-            )
-          }}
-        />
+        <Tab.Screen name="Trip" component={AddTripScreen} />
+        <Tab.Screen name="Request" component={AddRequestScreen} />
       </Tab.Navigator>
     </View>
   );

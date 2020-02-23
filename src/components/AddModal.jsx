@@ -82,7 +82,7 @@ export default function AddModal(props) {
         city: "",
         country: ""
       });
-      setVisible(false);
+      setVisible && setVisible(false);
       addItem(newItem);
     }
   };
@@ -157,166 +157,163 @@ export default function AddModal(props) {
   }, []);
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={false}
-      visible={visible}
-      presentationStyle="overFullScreen"
+    // <Modal
+    //   animationType="slide"
+    //   transparent={false}
+    //   visible={visible}
+    //   presentationStyle="overFullScreen"
+    // >
+    <View
+      style={{
+        flex: 1,
+        marginTop: 30,
+        opacity: imageModal ? 0.1 : 1
+      }}
     >
-      <View
-        style={{
-          flex: 1,
-          marginTop: 30,
-          opacity: imageModal ? 0.1 : 1
-        }}
-      >
-        <ScrollView style={{ flex: 0.8 }}>
-          <View style={styles.inputBody}>
-            <View style={{ flex: 0.2 }}>
-              <View style={styles.stepInfo}>
-                <Text style={styles.stepText}>1</Text>
-              </View>
+      <ScrollView style={{ flex: 0.8 }}>
+        <View style={styles.inputBody}>
+          <View style={{ flex: 0.2 }}>
+            <View style={styles.stepInfo}>
+              <Text style={styles.stepText}>1</Text>
             </View>
-            <View style={styles.detail}>
-              <Text style={styles.title}>Description</Text>
-              <Text>Name</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Tell us what item you can buy?"
-                onChangeText={name => setNewItem({ ...newItem, name })}
-                value={newItem.name}
-              ></TextInput>
-              <View style={[styles.textInput, { borderBottomWidth: 0 }]}>
-                <Text>Image</Text>
-                <TouchableWithoutFeedback onPress={() => setImageModal(true)}>
-                  {newItem.image ? (
-                    <Image
-                      source={{ uri: newItem.image.uri }}
-                      style={{ width: 200, height: 200 }}
-                    />
-                  ) : (
-                    <View style={styles.imagePlaceholder}>
-                      <MaterialIcons
-                        name="add-a-photo"
-                        size={32}
-                        color="black"
-                      />
-                    </View>
-                  )}
-                </TouchableWithoutFeedback>
-              </View>
+          </View>
+          <View style={styles.detail}>
+            <Text style={styles.title}>Description</Text>
+            <Text>Name</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Tell us what item you can buy?"
+              onChangeText={name => setNewItem({ ...newItem, name })}
+              value={newItem.name}
+            ></TextInput>
+            <View style={[styles.textInput, { borderBottomWidth: 0 }]}>
+              <Text>Image</Text>
+              <TouchableWithoutFeedback onPress={() => setImageModal(true)}>
+                {newItem.image ? (
+                  <Image
+                    source={{ uri: newItem.image.uri }}
+                    style={{ width: 200, height: 200 }}
+                  />
+                ) : (
+                  <View style={styles.imagePlaceholder}>
+                    <MaterialIcons name="add-a-photo" size={32} color="white" />
+                  </View>
+                )}
+              </TouchableWithoutFeedback>
+            </View>
+            <View
+              style={[
+                styles.textInput,
+                {
+                  flexDirection: "row",
+                  borderBottomWidth: 0
+                }
+              ]}
+            >
+              <Text style={{ flex: 0.3, textAlignVertical: "center" }}>
+                Quantity
+              </Text>
               <View
-                style={[
-                  styles.textInput,
-                  {
-                    flexDirection: "row",
-                    borderBottomWidth: 0
-                  }
-                ]}
+                style={{
+                  flex: 0.3,
+                  flexDirection: "row"
+                }}
               >
-                <Text style={{ flex: 0.3, textAlignVertical: "center" }}>
-                  Quantity
-                </Text>
-                <View
-                  style={{
-                    flex: 0.3,
-                    flexDirection: "row"
-                  }}
+                <TouchableOpacity
+                  onPress={() =>
+                    setNewItem({
+                      ...newItem,
+                      quantity:
+                        newItem.quantity > 1
+                          ? newItem.quantity - 1
+                          : newItem.quantity
+                    })
+                  }
+                  onLongPress={() =>
+                    setNewItem({
+                      ...newItem,
+                      quantity:
+                        newItem.quantity > 1
+                          ? newItem.quantity - 1
+                          : newItem.quantity
+                    })
+                  }
                 >
-                  <TouchableOpacity
-                    onPress={() =>
-                      setNewItem({
-                        ...newItem,
-                        quantity:
-                          newItem.quantity > 1
-                            ? newItem.quantity - 1
-                            : newItem.quantity
-                      })
+                  <AntDesign name="minuscircleo" size={25} color="red" />
+                </TouchableOpacity>
+                <TextInput
+                  style={{
+                    textAlign: "center",
+                    width: 100,
+                    borderBottomWidth: 1
+                  }}
+                  keyboardType="phone-pad"
+                  onChangeText={text => {
+                    if (text !== "") {
+                      setNewItem({ ...newItem, quantity: parseInt(text) });
+                    } else {
+                      setNewItem({ ...newItem, quantity: 1 });
                     }
-                    onLongPress={() =>
-                      setNewItem({
-                        ...newItem,
-                        quantity:
-                          newItem.quantity > 1
-                            ? newItem.quantity - 1
-                            : newItem.quantity
-                      })
-                    }
-                  >
-                    <AntDesign name="minuscircleo" size={25} color="red" />
-                  </TouchableOpacity>
-                  <TextInput
-                    style={{
-                      textAlign: "center",
-                      width: 100,
-                      borderBottomWidth: 1
-                    }}
-                    keyboardType="phone-pad"
-                    onChangeText={text => {
-                      if (text !== "") {
-                        setNewItem({ ...newItem, quantity: parseInt(text) });
-                      } else {
-                        setNewItem({ ...newItem, quantity: 1 });
-                      }
-                    }}
-                    value={JSON.stringify(newItem?.quantity)}
-                  ></TextInput>
-                  <TouchableOpacity
-                    onPress={() =>
-                      setNewItem({ ...newItem, quantity: newItem.quantity + 1 })
-                    }
-                  >
-                    <AntDesign name="pluscircleo" size={25} color="green" />
-                  </TouchableOpacity>
-                </View>
+                  }}
+                  value={JSON.stringify(newItem?.quantity)}
+                ></TextInput>
+                <TouchableOpacity
+                  onPress={() =>
+                    setNewItem({ ...newItem, quantity: newItem.quantity + 1 })
+                  }
+                >
+                  <AntDesign name="pluscircleo" size={25} color="green" />
+                </TouchableOpacity>
               </View>
             </View>
           </View>
+        </View>
 
-          <View style={styles.inputBody}>
-            <View style={{ flex: 0.2 }}>
-              <View style={styles.stepInfo}>
-                <Text style={styles.stepText}>2</Text>
-              </View>
-            </View>
-            <View style={styles.detail}>
-              <Text style={styles.title}>Country</Text>
-              <Text>Name</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="What country you gonna buy that item?"
-                onChangeText={country => setNewItem({ ...newItem, country })}
-                value={newItem.country}
-              ></TextInput>
-
-              <Text>City Name</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Specify the city you buy the item"
-                onChangeText={city => setNewItem({ ...newItem, city })}
-                value={newItem.city}
-              ></TextInput>
+        <View style={styles.inputBody}>
+          <View style={{ flex: 0.2 }}>
+            <View style={styles.stepInfo}>
+              <Text style={styles.stepText}>2</Text>
             </View>
           </View>
+          <View style={styles.detail}>
+            <Text style={styles.title}>Country</Text>
+            <Text>Name</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="What country you gonna buy that item?"
+              onChangeText={country => setNewItem({ ...newItem, country })}
+              value={newItem.country}
+            ></TextInput>
 
-          <View style={styles.inputBody}>
-            <View style={{ flex: 0.2 }}>
-              <View style={styles.stepInfo}>
-                <Text style={styles.stepText}>3</Text>
-              </View>
-            </View>
-            <View style={styles.detail}>
-              <Text style={styles.title}>Price Per Piece</Text>
-              <TextInput
-                style={styles.textInput}
-                keyboardType="phone-pad"
-                placeholder="What price you offer to others?"
-                onChangeText={price => setNewItem({ ...newItem, price })}
-                value={newItem.price}
-              ></TextInput>
+            <Text>City Name</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Specify the city you buy the item"
+              onChangeText={city => setNewItem({ ...newItem, city })}
+              value={newItem.city}
+            ></TextInput>
+          </View>
+        </View>
+
+        <View style={styles.inputBody}>
+          <View style={{ flex: 0.2 }}>
+            <View style={styles.stepInfo}>
+              <Text style={styles.stepText}>3</Text>
             </View>
           </View>
-        </ScrollView>
+          <View style={styles.detail}>
+            <Text style={styles.title}>Price Per Piece</Text>
+            <TextInput
+              style={styles.textInput}
+              keyboardType="phone-pad"
+              placeholder="What price you offer to others?"
+              onChangeText={price => setNewItem({ ...newItem, price })}
+              value={newItem.price}
+            ></TextInput>
+          </View>
+        </View>
+      </ScrollView>
+      {setVisible && (
         <View style={styles.footer}>
           <TouchableOpacity
             style={styles.btnHide}
@@ -330,9 +327,10 @@ export default function AddModal(props) {
             <Feather name="save" size={28} color="white"></Feather>
           </TouchableOpacity>
         </View>
-        {renderAddImageModal()}
-      </View>
-    </Modal>
+      )}
+      {renderAddImageModal()}
+    </View>
+    // </Modal>
   );
 }
 
@@ -384,7 +382,7 @@ const styles = StyleSheet.create({
     height: 200,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#ecf0f1"
+    backgroundColor: "#34495e"
   },
   footer: {
     flex: 0.2,

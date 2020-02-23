@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity
 } from "react-native";
+import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 const statusColor = {
@@ -32,8 +33,18 @@ export default function CartList(props) {
         <ImageBackground
           source={{ uri: item.itemId.image }}
           style={styles.image}
-          blurRadius={showModal ? 2 : 0}
         >
+          <View style={styles.itemStatusBg}>
+            {item.itemId.status === "travel" ? (
+              <FontAwesome name="send" size={15} color="white"></FontAwesome>
+            ) : (
+              <MaterialCommunityIcons
+                name="shopping"
+                size={15}
+                color="white"
+              ></MaterialCommunityIcons>
+            )}
+          </View>
           <View
             style={[
               styles.statusBg,
@@ -71,5 +82,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     color: "white"
+  },
+  itemStatusBg: {
+    position: "absolute",
+    right: 5,
+    top: 5,
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor: "#2f3640"
   }
 });

@@ -47,7 +47,7 @@ export default function CartListScreen(props) {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-
+    setStatusShown("all");
     dispatch(fetchCartList()).then(() => setRefreshing(false));
   }, [refreshing]);
 
@@ -92,7 +92,7 @@ export default function CartListScreen(props) {
   return isLoading ? (
     <SplashScreen></SplashScreen>
   ) : (
-    <View style={[styles.background, showModal && { opacity: 0.05 }]}>
+    <View style={[styles.background, showModal && { opacity: 0.1 }]}>
       <View style={{ flex: 0.1, flexDirection: "row" }}>
         <Text style={{ marginHorizontal: 5, textAlignVertical: "center" }}>
           Filter
@@ -114,7 +114,7 @@ export default function CartListScreen(props) {
               color="black"
             ></MaterialCommunityIcons>
             <Text style={{ textTransform: "capitalize", letterSpacing: 2 }}>
-              no {statusShown} order
+              no {statusShown} item
             </Text>
           </View>
         ) : (

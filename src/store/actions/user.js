@@ -1,3 +1,4 @@
+import { AsyncStorage } from "react-native";
 import { AUTH_START, AUTH_FAIL, SIGN_IN, SIGN_OUT } from "../actionTypes";
 
 const BASE_URL = "http://35.197.153.118";
@@ -8,20 +9,22 @@ export function userRegister({ email, name, password }) {
       type: AUTH_START
     });
 
-    console.log({ email, name, password });
-
-    let response = await fetch(`${BASE_URL}/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, name, password })
-    });
-    if (response.ok) {
-      let json = await response.json();
-      dispatch({ type: SIGN_IN, token: json.token });
-    } else {
-      dispatch({ type: AUTH_FAIL });
+    try {
+      let response = await fetch(`${BASE_URL}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, name, password })
+      });
+      if (response.ok) {
+        let json = await response.json();
+        dispatch({ type: SIGN_IN, token: json.token });
+      } else {
+        dispatch({ type: AUTH_FAIL });
+      }
+    } catch (error) {
+      dispatch({ type: AUTH_FAIL, error });
     }
   };
 }
@@ -32,23 +35,32 @@ export function userLogin({ email, password }) {
       type: AUTH_START
     });
 
-    let response = await fetch(`${BASE_URL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    });
-    if (response.ok) {
-      let json = await response.json();
-      dispatch({ type: SIGN_IN, token: json.token });
-    } else {
-      dispatch({ type: AUTH_FAIL });
+    try {
+      let response = await fetch(`${BASE_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
+      if (response.ok) {
+        let json = await response.json();
+        AsyncStorage.setItem("userToken", json.token);
+        AsyncStorage.setItem("name", json.name);
+        AsyncStorage.setItem("point", json.point);
+
+        dispatch({ type: SIGN_IN, token: json.token });
+      } else {
+        dispatch({ type: AUTH_FAIL });
+      }
+    } catch (error) {
+      dispatch({ type: AUTH_FAIL, error });
     }
   };
 }
 
 export function signOut() {
+  AsyncStorage.removeItem("userToken");
   dispatch({ type: SIGN_OUT });
 }
 

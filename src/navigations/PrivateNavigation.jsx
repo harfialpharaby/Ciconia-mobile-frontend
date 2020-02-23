@@ -8,6 +8,7 @@ import ItemList from "../screens/ItemListScreen";
 import CartListScreen from "../screens/CartListScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import AddNavigation from "./AddNavigation";
+import TravelNavigation from "./TravelNavigation";
 
 export default function PrivateNavigation(props) {
   const Tab = createBottomTabNavigator();
@@ -21,14 +22,14 @@ export default function PrivateNavigation(props) {
       }}
     >
       <Tab.Screen
-        name="TravelerList"
+        name="TravelNavigation"
         options={{
           tabBarLabel: "Traveler",
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="home" color={color} size={size} />
           )
         }}
-        component={TravelerList}
+        component={TravelNavigation}
       />
       <Tab.Screen
         name="ItemList"

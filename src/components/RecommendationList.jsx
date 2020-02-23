@@ -64,7 +64,6 @@ export default function RecommendationList(props) {
             <Text>
               {item.city}, {item.country}
             </Text>
-            {/* <Text>{JSON.stringify(Object.keys(item))}</Text> */}
             <Text
               style={{
                 opacity: 0.3,

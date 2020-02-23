@@ -24,7 +24,7 @@ export default function userReducer(state = initialState, action) {
       return {
         ...state,
         isLoading: false,
-        error: action.err
+        error: action.error
       };
     case RESTORE_TOKEN:
       return {

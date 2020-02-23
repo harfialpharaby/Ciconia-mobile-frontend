@@ -1,25 +1,29 @@
-import React, { useEffect } from "react";
-import { StyleSheet, Text, View, Button, FlatList } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState, useCallback } from "react";
+import { StyleSheet, Text, View, FlatList, RefreshControl } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Constants from "expo-constants";
 
 import { fetchItemList } from "../store/actions/items";
 import ItemCard from "../components/ItemCard";
+import SplashScreen from "./SplashScreen";
 
 export default function CartListScreen(props) {
-  const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
   const { isLoading, items, error } = useSelector(state => state.items);
   const dispatch = useDispatch();
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    dispatch(fetchItemList()).then(() => setRefreshing(false));
+  }, [refreshing]);
 
   useEffect(() => {
     dispatch(fetchItemList());
   }, []);
 
   return isLoading ? (
-    <View style={styles.container}>
-      <Text>Loading...</Text>
-    </View>
+    <SplashScreen></SplashScreen>
   ) : !items.length ? (
     <View style={styles.container}>
       <Text>No Travelers Yet</Text>
@@ -27,6 +31,9 @@ export default function CartListScreen(props) {
   ) : (
     <View style={styles.container}>
       <FlatList
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         showsVerticalScrollIndicator={false}
         numColumns={3}
         data={items}

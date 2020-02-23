@@ -6,14 +6,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { RESTORE_TOKEN } from "../store/actionTypes";
 import SplashScreen from "../screens/SplashScreen";
 import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
 import PrivateNavigation from "./PrivateNavigation";
-import TravelerListScreen from "../screens/TravelerListScreen";
+import AuthNavigation from "./AuthNavigation";
 
 const Stack = createStackNavigator();
 
 export default function RootNavigation() {
   const dispatch = useDispatch();
-  const { isLoading, isSignout, userToken } = useSelector(state => state.user);
+  const { isLoading, userToken } = useSelector(state => state.user);
 
   useEffect(() => {
     const bootstrapAsync = async () => {
@@ -38,18 +39,18 @@ export default function RootNavigation() {
     <SplashScreen />
   ) : (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         {userToken == null ? (
           // No token found, user isn't signed in
           <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{
-              title: "Login",
-              // When logging out, a pop animation feels intuitive
-              // You can remove this if you want the default 'push' animation
-              animationTypeForReplace: isSignout ? "pop" : "push"
-            }}
+            name="AuthNavigation"
+            component={AuthNavigation}
+            // options={{
+            //   title: "Login",
+            //   // When logging out, a pop animation feels intuitive
+            //   // You can remove this if you want the default 'push' animation
+            //   animationTypeForReplace: isSignout ? "pop" : "push"
+            // }}
           />
         ) : (
           // User is signed in

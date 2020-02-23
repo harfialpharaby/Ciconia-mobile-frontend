@@ -1,10 +1,17 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, ImageBackground, ActivityIndicator } from "react-native";
 
 export default function SplashScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: "center" }}>
-      <Text style={{ textAlign: "center" }}>Loading...</Text>
-    </View>
+    <ImageBackground
+      style={{ flex: 1, width: "100%", justifyContent: "center" }}
+      source={require("../../assets/splash.png")}
+    >
+      <View style={{ flex: 0.4, justifyContent: "flex-end" }}>
+        <Text style={{ textAlign: "center", letterSpacing: 3 }}>
+          Loading...
+        </Text>
+      </View>
+    </ImageBackground>
   );
 }

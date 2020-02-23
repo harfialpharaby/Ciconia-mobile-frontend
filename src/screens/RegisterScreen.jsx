@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,22 +12,26 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 
-import { userLogin } from "../store/actions/user";
+import { userRegister } from "../store/actions/user";
 
 export default function LoginScreen() {
-  const [email, setEmail] = React.useState("harfi@mail.com");
-  const [password, setPassword] = React.useState("123456");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const selector = useSelector(state => state.user);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const validateInput = () => {
-    if (!email.length || !password.length) {
-      Alert.alert("ALERT !", "Invalid Email or Password !");
+    if (!confirm.length || !password.length || !name.length || !email.length) {
+      Alert.alert("ALERT !", "Fill all inputs to continue register !");
+    } else if (confirm !== password) {
+      Alert.alert("ALERT !", "Password must be the same !");
     } else {
-      dispatch(userLogin({ email, password }));
+      dispatch(userRegister({ email, name, password }));
     }
   };
 
@@ -48,6 +52,15 @@ export default function LoginScreen() {
               source={require("../../assets/transparent.png")}
               style={{ width: 150, height: 150 }}
             ></Image>
+          </View>
+          <View style={styles.inputText}>
+            <Feather name="user" size={20} color="black"></Feather>
+            <TextInput
+              style={{ marginLeft: 5, width: "90%" }}
+              placeholder="Name"
+              value={name}
+              onChangeText={setName}
+            />
           </View>
           <View style={styles.inputText}>
             <MaterialCommunityIcons
@@ -72,14 +85,24 @@ export default function LoginScreen() {
               secureTextEntry
             />
           </View>
+          <View style={styles.inputText}>
+            <AntDesign name="lock" size={20} color="black" />
+            <TextInput
+              style={{ marginLeft: 5, width: "90%" }}
+              placeholder="Repeat Password"
+              value={confirm}
+              onChangeText={setConfirm}
+              secureTextEntry
+            />
+          </View>
           <TouchableOpacity style={styles.signinBtn} onPress={validateInput}>
-            <Text style={{ fontWeight: "bold" }}>Sign In</Text>
+            <Text style={{ fontWeight: "bold" }}>Sign Up</Text>
           </TouchableOpacity>
         </View>
         <View style={{ flex: 0.05, flexDirection: "row" }}>
-          <Text>Don't have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={{ fontWeight: "bold" }}>Sign Up</Text>
+          <Text>Already have account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={{ fontWeight: "bold" }}>Sign In</Text>
           </TouchableOpacity>
         </View>
       </View>

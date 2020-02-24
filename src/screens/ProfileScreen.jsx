@@ -1,10 +1,13 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { connect } from "react-redux";
+import Constants from "expo-constants";
 import { FontAwesome } from "@expo/vector-icons";
 
+import { SIGN_OUT } from "../store/actionTypes";
 import ProfileHeader from "../components/ProfileHeader";
 
-export default class ProfileScreen extends Component {
+class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,8 +53,27 @@ export default class ProfileScreen extends Component {
 
   render() {
     return !this.state.items ? (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>MY PROFILE</Text>
+      <View style={{ flex: 1, paddingTop: Constants.statusBarHeight }}>
+        <View
+          style={{
+            flex: 0.07,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            alignSelf: "center",
+            width: "95%"
+          }}
+        >
+          <Text>PROFILE NAME</Text>
+          <TouchableOpacity
+            onPress={() => this.props.dispatch({ type: SIGN_OUT })}
+          >
+            <Text style={{ fontWeight: "bold", color: "grey" }}>Sign Out</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ flex: 0.93, width: "100%", backgroundColor: "blue" }}>
+          <Text>MY PROFILE</Text>
+        </View>
       </View>
     ) : (
       <View style={{ flex: 1 }}>
@@ -61,6 +83,8 @@ export default class ProfileScreen extends Component {
     );
   }
 }
+
+export default connect()(ProfileScreen);
 
 const styles = StyleSheet.create({
   noItem: {

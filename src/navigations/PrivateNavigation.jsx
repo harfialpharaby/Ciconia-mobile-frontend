@@ -3,7 +3,6 @@ import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather, AntDesign } from "@expo/vector-icons";
 
-import TravelerList from "../screens/TravelerListScreen";
 import ItemList from "../screens/ItemListScreen";
 import CartListScreen from "../screens/CartListScreen";
 import ProfileScreen from "../screens/ProfileScreen";

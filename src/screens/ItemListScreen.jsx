@@ -26,7 +26,7 @@ export default function CartListScreen(props) {
     <SplashScreen></SplashScreen>
   ) : !items.length ? (
     <View style={styles.container}>
-      <Text>No Travelers Yet</Text>
+      <Text>No Items Yet</Text>
     </View>
   ) : (
     <View style={styles.container}>

@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Feather, AntDesign } from "@expo/vector-icons";
 import Moment from "moment";
 
 export default function ProfileHeader(props) {
@@ -19,6 +19,17 @@ export default function ProfileHeader(props) {
       ? `${splitName[0][0]}${splitName[1][0]}`
       : `${splitName[0][0]}`;
 
+  const renderLocation = location => {
+    const normalizedLocations = location.split(",");
+    return (
+      <View>
+        {normalizedLocations.map((loc, index) => {
+          return <Text key={`${loc}${index}`}>{loc.trim()}</Text>;
+        })}
+      </View>
+    );
+  };
+
   return (
     <View style={{ flex: 0.3, flexDirection: "row" }}>
       <View
@@ -30,20 +41,37 @@ export default function ProfileHeader(props) {
         <View style={[styles.aliasBg, { backgroundColor: randomColor }]}>
           <Text style={styles.aliasText}>{aliasName.toUpperCase()}</Text>
         </View>
-        <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-          {userId.name}
-        </Text>
+        <Text style={styles.name}>{userId.name}</Text>
       </View>
       <View style={{ flex: 0.65, justifyContent: "center" }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-          <Text style={{ letterSpacing: 1, fontSize: 20 }}>{locationFrom}</Text>
-          <FontAwesome name="plane" size={20} color="black"></FontAwesome>
-          <Text style={{ letterSpacing: 1, fontSize: 20 }}>{locationTo}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center"
+          }}
+        >
+          <FontAwesome
+            name="plane"
+            size={20}
+            color="#f39c12"
+            style={{ marginHorizontal: 5 }}
+          ></FontAwesome>
+          {renderLocation(locationFrom)}
+          <Feather
+            name="arrow-right"
+            size={15}
+            color="black"
+            style={{ alignSelf: "center", marginHorizontal: 5 }}
+          />
+          {renderLocation(locationTo)}
         </View>
-        <Text style={{ letterSpacing: 1, fontSize: 15 }}>Depart at</Text>
-        <Text style={{ fontWeight: "bold", letterSpacing: 1, fontSize: 15 }}>
-          {Moment(departure).format("dddd, MMMM Do YYYY")}
-        </Text>
+
+        <View style={{ flex: 0.5, flexDirection: "row", alignItems: "center" }}>
+          <AntDesign name="calendar" size={20} color="black" />
+          <Text style={{ marginLeft: 5 }}>
+            {Moment(departure).format("dddd, MMMM Do YYYY")}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -60,5 +88,10 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50
   },
-  aliasText: { fontSize: 70, color: "white" }
+  aliasText: { fontSize: 70, color: "white" },
+  name: {
+    textAlign: "center",
+    textTransform: "capitalize",
+    fontWeight: "bold"
+  }
 });

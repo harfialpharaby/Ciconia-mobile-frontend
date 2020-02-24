@@ -15,7 +15,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 import InputDestination from "../components/InputDestination";
 import InputDate from "../components/InputDate";
-import AddModal from "../components/AddModal";
+import InputItemForm from "../components/InputItemForm";
 import RecommendationList from "../components/RecommendationList";
 
 export default class AddTripScreen extends Component {
@@ -41,6 +41,10 @@ export default class AddTripScreen extends Component {
       items: []
     };
   }
+
+  onChangeCity = ({ text, type }) => {
+    console.log({ text, type });
+  };
 
   onChangeText = async ({ text, type }) => {
     text = text.toLowerCase();
@@ -94,6 +98,10 @@ export default class AddTripScreen extends Component {
     });
   };
 
+  validateInput = () => {
+    console.log(this.state);
+  };
+
   render() {
     return (
       <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
@@ -110,6 +118,7 @@ export default class AddTripScreen extends Component {
               title="From"
               placeholder="Departure"
               onChangeCountry={this.onChangeTextDelayed}
+              onChangeCity={this.onChangeCity}
               flag={this.state.departureFlag}
             ></InputDestination>
             <View
@@ -125,6 +134,7 @@ export default class AddTripScreen extends Component {
               title="To"
               placeholder="Destination"
               onChangeCountry={this.onChangeTextDelayed}
+              onChangeCity={this.onChangeCity}
               flag={this.state.destinationFlag}
             ></InputDestination>
           </View>
@@ -200,6 +210,7 @@ export default class AddTripScreen extends Component {
               alignItems: "center",
               backgroundColor: "#00adee"
             }}
+            onPress={this.validateInput}
           >
             <Text
               style={{
@@ -210,21 +221,16 @@ export default class AddTripScreen extends Component {
               POST TRIP
             </Text>
           </TouchableOpacity>
-          {/* <AddModal
-            visible={this.state.showAddItem}
-            setVisible={showAddItem => this.setState({ showAddItem })}
-            addItem={item => this.addItem(item)}
-          ></AddModal> */}
           <Modal
             animationType="slide"
             transparent={false}
             visible={this.state.showAddItem}
             presentationStyle="overFullScreen"
           >
-            <AddModal
+            <InputItemForm
               setVisible={showAddItem => this.setState({ showAddItem })}
               addItem={item => this.addItem(item)}
-            ></AddModal>
+            ></InputItemForm>
           </Modal>
         </View>
       </TouchableWithoutFeedback>

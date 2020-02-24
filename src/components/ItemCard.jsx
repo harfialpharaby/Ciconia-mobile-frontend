@@ -23,7 +23,7 @@ export default function ItemCard(props) {
         >
           <View style={styles.itemStatusBg}>
             {item.status === "travel" ? (
-              <FontAwesome name="send" size={15} color="white"></FontAwesome>
+              <FontAwesome name="plane" size={15} color="white"></FontAwesome>
             ) : (
               <MaterialCommunityIcons
                 name="shopping"

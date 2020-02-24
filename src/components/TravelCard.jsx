@@ -6,9 +6,11 @@ import {
   Dimensions,
   TouchableOpacity
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, AntDesign, Feather } from "@expo/vector-icons";
 import Moment from "moment";
 import { useNavigation } from "@react-navigation/native";
+
+const { width } = Dimensions.get("window");
 
 export default function TravelCard(props) {
   const randomColor =
@@ -21,7 +23,6 @@ export default function TravelCard(props) {
     ")";
   const { item } = props;
   const navigation = useNavigation();
-  const { width } = Dimensions.get("window");
   const splitName = item?.userId?.name.split(" ");
   const aliasName =
     splitName.length && splitName.length > 1
@@ -29,15 +30,7 @@ export default function TravelCard(props) {
       : `${splitName[0][0]}`;
 
   return (
-    <View
-      style={{
-        flex: 1,
-        width,
-        height: 100,
-        flexDirection: "row",
-        marginBottom: 15
-      }}
-    >
+    <View style={styles.background}>
       <TouchableOpacity
         style={{ flex: 0.2, justifyContent: "center" }}
         onPress={() =>
@@ -48,40 +41,53 @@ export default function TravelCard(props) {
           <Text style={styles.aliasText}>{aliasName.toUpperCase()}</Text>
         </View>
       </TouchableOpacity>
-      <View style={[styles.triangleCorner]} />
+      <View style={styles.triangleCorner} />
       <TouchableOpacity
         style={styles.content}
         onPress={() =>
           navigation.navigate("TravelerScreen", { item, randomColor })
         }
       >
-        <View>
-          <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-            <Text style={{ fontWeight: "normal" }}>Hi, I am </Text>
-            {item.userId.name.charAt(0).toUpperCase() +
-              item.userId.name.slice(1)}
-          </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-evenly"
-            }}
-          >
-            <Text style={{ letterSpacing: 1 }}>{item.locationFrom}</Text>
-            <FontAwesome name="plane" size={20} color="black" />
-            <Text style={{ letterSpacing: 1 }}>{item.locationTo}</Text>
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <View style={{ flex: 0.3 }}>
+            <Text style={{ textTransform: "capitalize", fontWeight: "bold" }}>
+              {item.userId.name}
+            </Text>
           </View>
-          <Text style={{ letterSpacing: 1 }}>
-            See my shopping list in{" "}
-            <Text style={{ fontWeight: "bold" }}>{item.locationFrom}</Text>
-          </Text>
-          <Text style={{ letterSpacing: 1 }}>
-            before{" "}
-            <Text style={{ fontWeight: "bold" }}>
+          <View style={styles.location}>
+            <FontAwesome name="plane" size={20} color="#f39c12" />
+            <Text style={{ fontSize: 15, marginLeft: 5 }}>
+              {item.locationFrom.split(",").length > 1
+                ? item.locationFrom.split(",")[1]
+                : item.locationFrom}
+            </Text>
+            <Feather
+              name="arrow-right"
+              size={12}
+              color="black"
+              style={{ alignSelf: "center", marginHorizontal: 5 }}
+            />
+            <Text style={{ fontSize: 15 }}>
+              {item.locationTo.split(",").length > 1
+                ? item.locationTo.split(",")[1]
+                : item.locationTo}
+            </Text>
+          </View>
+          <View style={{ flex: 0.3, flexDirection: "row" }}>
+            <AntDesign name="calendar" size={20} color="black" />
+            <Text style={{ textAlignVertical: "center", marginLeft: 3 }}>
               {Moment(item.departure).format("dddd, MMMM Do YYYY")}
             </Text>
-          </Text>
-          {/* <Text>{JSON.stringify(Object.keys(item))}</Text> */}
+          </View>
+          {/* <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+            <Text style={{ fontWeight: "normal" }}>Hi, I am </Text>
+            {item.userId.name}
+          </Text> */}
+
+          {/* <Text>
+            See my shopping list in{" "}
+            <Text style={{ fontWeight: "bold" }}>{item.locationFrom}</Text>
+          </Text> */}
         </View>
       </TouchableOpacity>
     </View>
@@ -89,6 +95,21 @@ export default function TravelCard(props) {
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width,
+    height: 100,
+    flexDirection: "row",
+    marginBottom: 15
+  },
+  location: {
+    flex: 0.3,
+    flexDirection: "row",
+    backgroundColor: "#ecf0f1",
+    alignItems: "center",
+    paddingLeft: 10,
+    marginBottom: 5
+  },
   aliasBg: {
     alignSelf: "flex-end",
     alignItems: "center",

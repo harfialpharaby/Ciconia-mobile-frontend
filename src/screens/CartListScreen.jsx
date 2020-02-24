@@ -20,17 +20,37 @@ import CartModal from "../components/CartModal";
 export default function CartListScreen(props) {
   const statuses = [
     { key: "all", name: "all" },
-    { key: "open", name: "open", color: "#e74c3c" },
-    { key: "offered", name: "offered", color: "#e67e22" },
-    { key: "pendingPurchase", name: "pending purchase", color: "#f1c40f" },
-    { key: "pendingDelivery", name: "pending delivery", color: "#8e44ad" },
-    { key: "verification", name: "pending verification", color: "#2980b9" },
+    { key: "open", name: "open", authorized: "travel", color: "#e74c3c" },
+    {
+      key: "offered",
+      name: "offered",
+      authorized: "buyer",
+      color: "#e67e22"
+    },
+    {
+      key: "pendingPurchase",
+      name: "pending purchase",
+      authorized: "buyer",
+      color: "#f1c40f"
+    },
+    {
+      key: "verification",
+      name: "pending verification",
+      authorized: "travel",
+      color: "#2980b9"
+    },
+    {
+      key: "pendingDelivery",
+      name: "pending delivery",
+      authorized: "travel",
+      color: "#8e44ad"
+    },
     { key: "completed", name: "completed", color: "#2ecc71" }
   ];
   const [refreshing, setRefreshing] = useState(false);
   const [statusShown, setStatusShown] = useState("");
   const { isLoading, carts, error } = useSelector(state => state.carts);
-  const [showCarts, setShowCarts] = useState(carts);
+  const [showCarts, setShowCarts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showDetail, setShowDetail] = useState(null);
   const dispatch = useDispatch();
@@ -52,12 +72,12 @@ export default function CartListScreen(props) {
   }, [refreshing]);
 
   const filterStatus = status => {
-    if (status.key === "all") {
+    if (status.key === "all" || !carts) {
       setShowCarts(carts);
     } else {
       setShowCarts(carts.filter(cart => cart.status === status.name));
     }
-    setStatusShown(status.key);
+    setStatusShown(status.name);
   };
 
   const renderStatus = () => {
@@ -106,7 +126,7 @@ export default function CartListScreen(props) {
         </ScrollView>
       </View>
       <View style={{ flex: 0.9 }}>
-        {!showCarts.length ? (
+        {!showCarts?.length ? (
           <View style={styles.nullStatus}>
             <MaterialCommunityIcons
               name="weather-windy-variant"
@@ -114,7 +134,7 @@ export default function CartListScreen(props) {
               color="black"
             ></MaterialCommunityIcons>
             <Text style={{ textTransform: "capitalize", letterSpacing: 2 }}>
-              no {statusShown} item
+              no {statusShown !== "all" && statusShown} item
             </Text>
           </View>
         ) : (

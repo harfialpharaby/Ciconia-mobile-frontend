@@ -9,15 +9,17 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Alert
+  Alert,
+  Dimensions
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
+import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
 
 export default function AddModal(props) {
-  const { visible, setVisible, addItem } = props;
+  const { setVisible, addItem } = props;
   const [imageModal, setImageModal] = useState(false);
   const [newItem, setNewItem] = useState({
     name: "",
@@ -38,10 +40,30 @@ export default function AddModal(props) {
     }
   };
 
+  const _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== "granted") {
+      this.setState({
+        errorMessage: "Permission to access location was denied"
+      });
+    }
+
+    let currentLocation = await Location.getCurrentPositionAsync({});
+    let reverseGeolocation = await Location.reverseGeocodeAsync(
+      currentLocation.coords
+    );
+    // setCurrentLocation(reverseGeolocation);
+    // console.log(reverseGeolocation);
+  };
+
   const _openCamera = async () => {
     setImageModal(false);
     let image = await ImagePicker.launchCameraAsync({
-      base64: true
+      base64: true,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      exif: true
     });
     if (!image.cancelled) {
       setNewItem({ ...newItem, image });
@@ -154,19 +176,22 @@ export default function AddModal(props) {
 
   useEffect(() => {
     getPermissionAsync();
+    if (Platform.OS === "android" && !Constants.isDevice) {
+      Alert.alert(
+        "ALERT!",
+        "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
+      );
+    } else {
+      _getLocationAsync();
+    }
   }, []);
 
   return (
-    // <Modal
-    //   animationType="slide"
-    //   transparent={false}
-    //   visible={visible}
-    //   presentationStyle="overFullScreen"
-    // >
     <View
       style={{
         flex: 1,
         marginTop: 30,
+        marginBottom: setVisible ? 5 : 0,
         opacity: imageModal ? 0.1 : 1
       }}
     >
@@ -182,7 +207,7 @@ export default function AddModal(props) {
             <Text>Name</Text>
             <TextInput
               style={styles.textInput}
-              placeholder="Tell us what item you can buy?"
+              placeholder="Item Name"
               onChangeText={name => setNewItem({ ...newItem, name })}
               value={newItem.name}
             ></TextInput>
@@ -221,15 +246,6 @@ export default function AddModal(props) {
               >
                 <TouchableOpacity
                   onPress={() =>
-                    setNewItem({
-                      ...newItem,
-                      quantity:
-                        newItem.quantity > 1
-                          ? newItem.quantity - 1
-                          : newItem.quantity
-                    })
-                  }
-                  onLongPress={() =>
                     setNewItem({
                       ...newItem,
                       quantity:
@@ -280,7 +296,7 @@ export default function AddModal(props) {
             <Text>Name</Text>
             <TextInput
               style={styles.textInput}
-              placeholder="What country you gonna buy that item?"
+              placeholder="Country Name"
               onChangeText={country => setNewItem({ ...newItem, country })}
               value={newItem.country}
             ></TextInput>
@@ -288,7 +304,7 @@ export default function AddModal(props) {
             <Text>City Name</Text>
             <TextInput
               style={styles.textInput}
-              placeholder="Specify the city you buy the item"
+              placeholder="City Name"
               onChangeText={city => setNewItem({ ...newItem, city })}
               value={newItem.city}
             ></TextInput>
@@ -306,14 +322,14 @@ export default function AddModal(props) {
             <TextInput
               style={styles.textInput}
               keyboardType="phone-pad"
-              placeholder="What price you offer to others?"
+              placeholder="Offered Price"
               onChangeText={price => setNewItem({ ...newItem, price })}
               value={newItem.price}
             ></TextInput>
           </View>
         </View>
       </ScrollView>
-      {setVisible && (
+      {setVisible ? (
         <View style={styles.footer}>
           <TouchableOpacity
             style={styles.btnHide}
@@ -327,10 +343,32 @@ export default function AddModal(props) {
             <Feather name="save" size={28} color="white"></Feather>
           </TouchableOpacity>
         </View>
+      ) : (
+        <TouchableOpacity
+          style={{
+            flex: 0.11,
+            flexDirection: "row",
+            width: Dimensions.get("window").width,
+            marginLeft: 0,
+            justifyContent: "center",
+            alignItems: "center",
+            margintop: 10,
+            backgroundColor: "#00adee"
+          }}
+          onPress={inputValidation}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              letterSpacing: 5
+            }}
+          >
+            POST REQUEST
+          </Text>
+        </TouchableOpacity>
       )}
       {renderAddImageModal()}
     </View>
-    // </Modal>
   );
 }
 

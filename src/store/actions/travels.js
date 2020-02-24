@@ -15,7 +15,7 @@ export function fetchTravelList() {
     let response = await fetch(`${BASE_URL}/travels`);
     if (response.ok) {
       let travels = await response.json();
-      dispatch({ type: FETCH_TRAVEL_SUCCESS, travels });
+      dispatch({ type: FETCH_TRAVEL_SUCCESS, travels: travels.reverse() });
     } else {
       dispatch({ type: FETCH_TRAVEL_FAIL });
     }

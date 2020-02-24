@@ -7,10 +7,12 @@ import {
   Keyboard,
   Animated
 } from "react-native";
+import { connect } from "react-redux";
 
-import AddModal from "../components/AddModal";
+import { addItem } from "../store/actions/items";
+import InputItemForm from "../components/InputItemForm";
 
-export default class AddRequestScreen extends Component {
+class AddRequestScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,39 +52,22 @@ export default class AddRequestScreen extends Component {
     ]).start();
   };
 
-  validateInput = item => {
-    console.log(item);
+  addNewItem = item => {
+    this.props.dispatch(addItem(item, "watch"));
+    this.props.navigation.navigate("ItemList");
   };
 
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Animated.View
-          style={{ flex: 0.9, paddingBottom: this.keyboardHeight }}
-        >
-          <AddModal addItem={item => this.validateInput(item)}></AddModal>
+        <Animated.View style={{ flex: 1, paddingBottom: this.keyboardHeight }}>
+          <InputItemForm
+            addItem={item => this.addNewItem(item)}
+          ></InputItemForm>
         </Animated.View>
-        <TouchableOpacity
-          style={{
-            flex: 0.1,
-            flexDirection: "row",
-            width: Dimensions.get("window").width,
-            marginLeft: 0,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#00adee"
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 20,
-              letterSpacing: 5
-            }}
-          >
-            POST REQUEST
-          </Text>
-        </TouchableOpacity>
       </View>
     );
   }
 }
+
+export default connect()(AddRequestScreen);

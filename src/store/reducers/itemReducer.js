@@ -1,7 +1,9 @@
 import {
   FETCH_ITEM_START,
   FETCH_ITEM_SUCCESS,
-  FETCH_ITEM_FAIL
+  FETCH_ITEM_FAIL,
+  ADD_ITEM,
+  ADD_ITEM_SUCCESS
 } from "../actionTypes";
 
 const initialState = {
@@ -29,6 +31,16 @@ export default function travelReducer(state = initialState, action) {
         isLoading: false,
         error: action.err
       };
+    case ADD_ITEM:
+      return {
+        isLoading: true,
+        error: null
+      };
+    case ADD_ITEM_SUCCESS:
+      return {
+        isLoading: false
+      };
+
     default:
       return state;
   }

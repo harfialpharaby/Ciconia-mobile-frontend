@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, TextInput, Image } from "react-native";
 
 export default function InputDestination(props) {
-  const { title, placeholder, onChangeCountry, flag } = props;
+  const { title, placeholder, onChangeCountry, flag, onChangeCity } = props;
   const [focus, setFocus] = useState(false);
 
   return (
@@ -19,6 +19,7 @@ export default function InputDestination(props) {
         placeholder={placeholder}
         onFocus={() => setFocus(true)}
         onBlur={() => setFocus(false)}
+        onChangeText={text => onChangeCity({ type: placeholder, text })}
       ></TextInput>
       <View
         style={[

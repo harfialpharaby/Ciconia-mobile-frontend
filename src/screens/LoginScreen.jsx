@@ -17,7 +17,7 @@ import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { userLogin } from "../store/actions/user";
 
 export default function LoginScreen() {
-  const [email, setEmail] = React.useState("demo@mail.com");
+  const [email, setEmail] = React.useState("harfi@mail.com");
   const [password, setPassword] = React.useState("123456");
   const selector = useSelector(state => state.user);
   const dispatch = useDispatch();

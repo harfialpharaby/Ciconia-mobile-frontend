@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Modal,
@@ -17,36 +17,40 @@ import {
 
 export default function CartModal(props) {
   const { showModal, setShowModal, item, setShowDetail, statuses } = props;
+  const [doneIndex, setDoneIndex] = useState(0);
 
   const hideDetail = () => {
     setShowDetail(null);
     setShowModal(false);
   };
 
-  const renderCurrentStatus = () => {
-    let doneIndex = 0;
+  useEffect(() => {
     for (let i = 0; i < statuses.length; i++) {
       if (statuses[i].name === item.status) {
-        doneIndex = i;
+        setDoneIndex(i);
         break;
       }
     }
 
+    return () => setDoneIndex(0);
+  }, []);
+
+  const renderCurrentStatus = () => {
     return statuses.map((status, index) => {
       return (
-        <View style={{ width: 55, alignItems: "center" }} key={status.key}>
-          {index < doneIndex ? (
-            <Feather name="check-circle" size={25} color="#2ecc71"></Feather>
+        <View style={{ flex: 1, alignItems: "center" }} key={status.key}>
+          {index < doneIndex || index === statuses.length ? (
+            <Feather name="check-circle" size={20} color="#2ecc71"></Feather>
           ) : index === doneIndex && index < statuses.length ? (
             <TouchableOpacity>
               <FontAwesome
                 name="circle"
-                size={25}
+                size={20}
                 color="#f1c40f"
               ></FontAwesome>
             </TouchableOpacity>
           ) : (
-            <Feather name="circle" size={25} color="#7f8c8d"></Feather>
+            <Feather name="circle" size={20} color="#7f8c8d"></Feather>
           )}
           <Text style={styles.statusName}>{status.name}</Text>
         </View>
@@ -72,7 +76,7 @@ export default function CartModal(props) {
         </View>
         <View style={styles.itemStatusBg}>
           {item.itemId.status === "travel" ? (
-            <FontAwesome name="send" size={25} color="white"></FontAwesome>
+            <FontAwesome name="plane" size={25} color="white"></FontAwesome>
           ) : (
             <MaterialCommunityIcons
               name="shopping"
@@ -100,6 +104,26 @@ export default function CartModal(props) {
               {renderCurrentStatus()}
             </View>
           </View>
+          {statuses[doneIndex]?.authorized && (
+            <View style={styles.footerBackground}>
+              {statuses[doneIndex].authorized === "buyer" ? (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={[styles.confirmBg, { backgroundColor: "#00adee" }]}
+                >
+                  <Text style={styles.confirmText}>
+                    confirm {statuses[doneIndex].name}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={styles.confirmBg}>
+                  <Text style={styles.confirmText}>
+                    waiting response from traveler
+                  </Text>
+                </View>
+              )}
+            </View>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </Modal>
@@ -119,7 +143,7 @@ const styles = StyleSheet.create({
   },
   statusName: {
     textAlign: "center",
-    fontSize: 11,
+    fontSize: 10,
     color: "white",
     textTransform: "capitalize"
   },
@@ -133,8 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textTransform: "capitalize",
     color: "white",
-    marginLeft: 10,
-    letterSpacing: 1
+    marginLeft: 10
   },
   headerSubBackground: {
     flex: 0.5,
@@ -143,7 +166,6 @@ const styles = StyleSheet.create({
   },
   headerSubForeground: {
     fontWeight: "bold",
-    letterSpacing: 0.5,
     textTransform: "capitalize",
     color: "white",
     marginLeft: 10
@@ -152,5 +174,21 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 10,
     top: 10
+  },
+  footerBackground: {
+    flex: 0.2,
+    width: "100%",
+    justifyContent: "flex-end"
+  },
+  confirmBg: {
+    flex: 0.5,
+    justifyContent: "center",
+    backgroundColor: "#2f3640"
+  },
+  confirmText: {
+    textTransform: "capitalize",
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
   }
 });

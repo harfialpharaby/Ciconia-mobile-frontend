@@ -14,6 +14,7 @@ export default function travelReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_CART_START:
       return {
+        ...state,
         isLoading: true,
         carts: [],
         error: null
@@ -26,6 +27,7 @@ export default function travelReducer(state = initialState, action) {
       };
     case FETCH_CART_FAIL:
       return {
+        ...state,
         isLoading: false,
         error: action.error
       };

@@ -8,17 +8,21 @@ import {
   Keyboard,
   Platform,
   Dimensions,
-  Modal
+  Modal,
+  Alert
 } from "react-native";
 import { debounce } from "lodash";
 import { AntDesign } from "@expo/vector-icons";
+import { connect } from "react-redux";
 
+import { addBulkItems } from "../store/actions/items";
+import { addTravel } from "../store/actions/travels";
 import InputDestination from "../components/InputDestination";
 import InputDate from "../components/InputDate";
 import InputItemForm from "../components/InputItemForm";
 import RecommendationList from "../components/RecommendationList";
 
-export default class AddTripScreen extends Component {
+class AddTripScreen extends Component {
   constructor(props) {
     super(props);
     this.onChangeTextDelayed = debounce(this.onChangeText, 1000);
@@ -38,15 +42,41 @@ export default class AddTripScreen extends Component {
       departureDate: new Date(),
       showDatePicker: false,
       showAddItem: false,
+      departure: { city: null, country: null },
+      destination: { city: null, country: null },
       items: []
     };
   }
 
+  initAndNavigate = () => {
+    this.setState({
+      departureFlag: null,
+      destinationFlag: null,
+      departureDate: new Date(),
+      showDatePicker: false,
+      showAddItem: false,
+      departure: { city: null, country: null },
+      destination: { city: null, country: null },
+      items: []
+    });
+    this.props.navigation.navigate("TravelerList");
+  };
   onChangeCity = ({ text, type }) => {
-    console.log({ text, type });
+    this.setState({
+      [type.toLowerCase()]: {
+        ...this.state[type.toLowerCase()],
+        city: text
+      }
+    });
   };
 
   onChangeText = async ({ text, type }) => {
+    this.setState({
+      [type.toLowerCase()]: {
+        ...this.state[type.toLowerCase()],
+        country: text
+      }
+    });
     text = text.toLowerCase();
     let normalizedCountry = text.toLowerCase();
     this.compass.forEach(c => {
@@ -99,55 +129,78 @@ export default class AddTripScreen extends Component {
   };
 
   validateInput = () => {
-    console.log(this.state);
+    if (
+      !this.props.myTravel &&
+      (!this.state.departureDate ||
+        !this.state.departure.city ||
+        !this.state.departure.country ||
+        !this.state.destination.city ||
+        !this.state.destination.country)
+    ) {
+      Alert.alert(
+        "Alert!",
+        "Fill all trip data except item in order to save trip!"
+      );
+    } else {
+      if (this.props.myTravel) {
+        this.props.dispatch(addBulkItems(this.state.items, "travel"));
+      } else {
+        this.props.dispatch(addTravel(this.state));
+      }
+      this.initAndNavigate();
+    }
   };
 
   render() {
     return (
       <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
         <View style={{ flex: 1, marginRight: 5, marginTop: 10 }}>
-          <View
-            style={{
-              flex: 0.2,
-              flexDirection: "row",
-              justifyContent: "space-around",
-              marginTop: 5
-            }}
-          >
-            <InputDestination
-              title="From"
-              placeholder="Departure"
-              onChangeCountry={this.onChangeTextDelayed}
-              onChangeCity={this.onChangeCity}
-              flag={this.state.departureFlag}
-            ></InputDestination>
-            <View
-              style={{
-                flex: 0.1,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <AntDesign name="right" size={30} color="black" />
+          {!this.props.myTravel && (
+            <View style={{ flex: 0.35 }}>
+              <View
+                style={{
+                  flex: 0.55,
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  marginTop: 5
+                }}
+              >
+                <InputDestination
+                  title="From"
+                  placeholder="Departure"
+                  onChangeCountry={this.onChangeTextDelayed}
+                  onChangeCity={this.onChangeCity}
+                  flag={this.state.departureFlag}
+                ></InputDestination>
+                <View
+                  style={{
+                    flex: 0.1,
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  <AntDesign name="right" size={30} color="black" />
+                </View>
+                <InputDestination
+                  title="To"
+                  placeholder="Destination"
+                  onChangeCountry={this.onChangeTextDelayed}
+                  onChangeCity={this.onChangeCity}
+                  flag={this.state.destinationFlag}
+                ></InputDestination>
+              </View>
+              <View style={{ flex: 0.45 }}>
+                <InputDate
+                  onChange={this.onChangeDate}
+                  setShow={() => this.setState({ showDatePicker: true })}
+                  {...this.state}
+                ></InputDate>
+              </View>
             </View>
-            <InputDestination
-              title="To"
-              placeholder="Destination"
-              onChangeCountry={this.onChangeTextDelayed}
-              onChangeCity={this.onChangeCity}
-              flag={this.state.destinationFlag}
-            ></InputDestination>
-          </View>
-          <View style={{ flex: 0.15 }}>
-            <InputDate
-              onChange={this.onChangeDate}
-              setShow={() => this.setState({ showDatePicker: true })}
-              {...this.state}
-            ></InputDate>
-          </View>
+          )}
           <View
             style={{
-              flex: 0.55,
+              flex: this.props.myTravel ? 1 : 0.55,
               margin: 10
             }}
           >
@@ -192,8 +245,18 @@ export default class AddTripScreen extends Component {
                   showsVerticalScrollIndicator={false}
                   style={{ flex: 0.9 }}
                   data={this.state.items}
-                  renderItem={({ item }) => (
-                    <RecommendationList item={item}></RecommendationList>
+                  renderItem={({ item, index }) => (
+                    <RecommendationList
+                      item={item}
+                      index={index}
+                      remove={delId =>
+                        this.setState({
+                          items: this.state.items.filter(
+                            (item, index) => index != delId
+                          )
+                        })
+                      }
+                    ></RecommendationList>
                   )}
                   keyExtractor={(item, index) => `${item.name}${index}`}
                 />
@@ -218,7 +281,7 @@ export default class AddTripScreen extends Component {
                 letterSpacing: 5
               }}
             >
-              POST TRIP
+              {this.props.myTravel ? "ADD RECOMMENDATION" : "POST TRIP"}
             </Text>
           </TouchableOpacity>
           <Modal
@@ -237,3 +300,9 @@ export default class AddTripScreen extends Component {
     );
   }
 }
+
+function mapStateToProps({ user }) {
+  return { myTravel: user.myProfile.travel };
+}
+
+export default connect(mapStateToProps)(AddTripScreen);

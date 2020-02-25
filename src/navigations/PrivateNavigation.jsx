@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather, AntDesign } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
 
+import { fetchMyProfile } from "../store/actions/user";
+import SplashScreen from "../screens/SplashScreen";
 import ItemList from "../screens/ItemListScreen";
 import CartListScreen from "../screens/CartListScreen";
 import ProfileScreen from "../screens/ProfileScreen";
@@ -11,8 +14,16 @@ import TravelNavigation from "./TravelNavigation";
 
 export default function PrivateNavigation(props) {
   const Tab = createBottomTabNavigator();
+  const { loadingProfile } = useSelector(state => state.user);
+  const dispatch = useDispatch();
 
-  return (
+  useEffect(() => {
+    dispatch(fetchMyProfile());
+  }, []);
+
+  return loadingProfile ? (
+    <SplashScreen text="Fetching Profile..." />
+  ) : (
     <Tab.Navigator
       tabBarOptions={{
         showLabel: false,

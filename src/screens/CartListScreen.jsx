@@ -110,7 +110,7 @@ export default function CartListScreen(props) {
   };
 
   return isLoading ? (
-    <SplashScreen></SplashScreen>
+    <SplashScreen text="Fetching Cart..."></SplashScreen>
   ) : (
     <View style={[styles.background, showModal && { opacity: 0.1 }]}>
       <View style={{ flex: 0.1, flexDirection: "row" }}>

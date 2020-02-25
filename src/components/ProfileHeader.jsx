@@ -4,14 +4,7 @@ import { FontAwesome, Feather, AntDesign } from "@expo/vector-icons";
 import Moment from "moment";
 
 export default function ProfileHeader(props) {
-  const {
-    _id,
-    itemList,
-    userId,
-    locationFrom,
-    locationTo,
-    departure
-  } = props.item;
+  const { userId, locationFrom, locationTo, departure } = props.item;
   const { randomColor } = props;
   const splitName = userId?.name.split(" ");
   const aliasName =
@@ -38,41 +31,50 @@ export default function ProfileHeader(props) {
           justifyContent: "space-evenly"
         }}
       >
-        <View style={[styles.aliasBg, { backgroundColor: randomColor }]}>
+        <View
+          style={[
+            styles.aliasBg,
+            { backgroundColor: randomColor || "#34495e" }
+          ]}
+        >
           <Text style={styles.aliasText}>{aliasName.toUpperCase()}</Text>
         </View>
         <Text style={styles.name}>{userId.name}</Text>
       </View>
-      <View style={{ flex: 0.65, justifyContent: "center" }}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center"
-          }}
-        >
-          <FontAwesome
-            name="plane"
-            size={20}
-            color="#f39c12"
-            style={{ marginHorizontal: 5 }}
-          ></FontAwesome>
-          {renderLocation(locationFrom)}
-          <Feather
-            name="arrow-right"
-            size={15}
-            color="black"
-            style={{ alignSelf: "center", marginHorizontal: 5 }}
-          />
-          {renderLocation(locationTo)}
-        </View>
+      {locationFrom && locationTo && departure && (
+        <View style={{ flex: 0.65, justifyContent: "center" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center"
+            }}
+          >
+            <FontAwesome
+              name="plane"
+              size={20}
+              color="#f39c12"
+              style={{ marginHorizontal: 5 }}
+            ></FontAwesome>
+            {renderLocation(locationFrom)}
+            <Feather
+              name="arrow-right"
+              size={15}
+              color="black"
+              style={{ alignSelf: "center", marginHorizontal: 5 }}
+            />
+            {renderLocation(locationTo)}
+          </View>
 
-        <View style={{ flex: 0.5, flexDirection: "row", alignItems: "center" }}>
-          <AntDesign name="calendar" size={20} color="black" />
-          <Text style={{ marginLeft: 5 }}>
-            {Moment(departure).format("dddd, MMMM Do YYYY")}
-          </Text>
+          <View
+            style={{ flex: 0.5, flexDirection: "row", alignItems: "center" }}
+          >
+            <AntDesign name="calendar" size={20} color="black" />
+            <Text style={{ marginLeft: 5 }}>
+              {Moment(departure).format("dddd, MMMM Do YYYY")}
+            </Text>
+          </View>
         </View>
-      </View>
+      )}
     </View>
   );
 }

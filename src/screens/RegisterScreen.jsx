@@ -10,7 +10,7 @@ import {
   Keyboard,
   Alert
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { Feather, MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 
@@ -21,7 +21,6 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const selector = useSelector(state => state.user);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 

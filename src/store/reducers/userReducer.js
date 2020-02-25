@@ -3,12 +3,16 @@ import {
   AUTH_FAIL,
   SIGN_IN,
   SIGN_OUT,
-  RESTORE_TOKEN
+  RESTORE_TOKEN,
+  MY_PROFILE,
+  LOADING_MY_PROFILE
 } from "../actionTypes";
 
 const initialState = {
   isLoading: false,
+  loadingProfile: false,
   userToken: null,
+  myProfile: null,
   error: null
 };
 
@@ -29,20 +33,33 @@ export default function userReducer(state = initialState, action) {
     case RESTORE_TOKEN:
       return {
         ...state,
-        userToken: action.token,
-        isLoading: false
+        isLoading: false,
+        userToken: action.token
       };
     case SIGN_IN:
       return {
         ...state,
-        userToken: action.token,
-        isLoading: false
+        isLoading: false,
+        userToken: action.token
+      };
+    case LOADING_MY_PROFILE:
+      return {
+        ...state,
+        loadingProfile: true,
+        myProfile: null,
+        error: null
+      };
+    case MY_PROFILE:
+      return {
+        ...state,
+        loadingProfile: false,
+        myProfile: action.myProfile
       };
     case SIGN_OUT:
       return {
         ...state,
-        userToken: null,
-        isLoading: false
+        isLoading: false,
+        userToken: null
       };
     default:
       return state;

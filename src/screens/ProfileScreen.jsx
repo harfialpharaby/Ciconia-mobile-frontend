@@ -1,97 +1,143 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  RefreshControl
+} from "react-native";
 import { connect } from "react-redux";
 import Constants from "expo-constants";
 import { FontAwesome } from "@expo/vector-icons";
 
 import { SIGN_OUT } from "../store/actionTypes";
+import { fetchMyProfile } from "../store/actions/user";
 import ProfileHeader from "../components/ProfileHeader";
+import ItemCard from "../components/ItemCard";
+import SplashScreen from "./SplashScreen";
 
 class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: this.props?.route?.params?.item?.itemList || null
+      items: this.props?.route?.params?.item?.itemList || null,
+      refreshing: false
     };
+    this.onRefresh = this.onRefresh.bind(this);
   }
 
+  onRefresh = () => {
+    this.setState({ refreshing: true });
+    this.props
+      .dispatch(fetchMyProfile())
+      .then(() => this.setState({ refreshing: false }));
+  };
+
   renderItems = () => {
-    if (!this.state?.items?.length) {
+    if (this.props.user.loadingProfile) {
+      return <SplashScreen text="Updating Profile Data..."></SplashScreen>;
+    } else if (
+      (this.props.route.name === "TravelerScreen" &&
+        !this.state.items?.length) ||
+      (this.props.route.name === "Profile" &&
+        !this.props.user.myProfile?.items.length)
+    ) {
       return (
-        <View style={styles.noItem}>
+        <View style={styles.item}>
           <FontAwesome
             name="paper-plane-o"
             size={32}
             color="black"
           ></FontAwesome>
-          <Text
-            style={{
-              letterSpacing: 2,
-              textTransform: "capitalize",
-              marginTop: 10
-            }}
-          >
-            No recommendation yet
+          <Text style={{ marginTop: 5, letterSpacing: 1 }}>
+            No Recommendation Yet
           </Text>
         </View>
       );
-    } else {
+    } else if (this.props.user.myProfile?.items || this.state.items?.length) {
       return (
-        <View>
-          <Text>I AM A TRAVELER</Text>
+        <View style={styles.item}>
+          <FlatList
+            refreshControl={
+              !this.state.items && (
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this.onRefresh}
+                />
+              )
+            }
+            showsVerticalScrollIndicator={false}
+            numColumns={3}
+            key={3}
+            data={
+              this.state.items
+                ? this.state.items.reverse()
+                : this.props.user.myProfile.items.reverse()
+            }
+            renderItem={({ item }) => <ItemCard item={item}></ItemCard>}
+            keyExtractor={item => item._id}
+          />
         </View>
-      );
-      return (
-        <FlatList
-          data={DATA}
-          renderItem={({ item }) => <Item title={item.title} />}
-          keyExtractor={item => item.id}
-        />
       );
     }
   };
 
   render() {
-    return !this.state.items ? (
+    const { myProfile } = this.props.user;
+
+    return (
       <View style={{ flex: 1, paddingTop: Constants.statusBarHeight }}>
-        <View
-          style={{
-            flex: 0.07,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            alignSelf: "center",
-            width: "95%"
-          }}
-        >
-          <Text>PROFILE NAME</Text>
-          <TouchableOpacity
-            onPress={() => this.props.dispatch({ type: SIGN_OUT })}
+        {!this.props.route?.params?.item && (
+          <View
+            style={{
+              flex: 0.07,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              alignSelf: "center",
+              width: "95%"
+            }}
           >
-            <Text style={{ fontWeight: "bold", color: "grey" }}>Sign Out</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ flex: 0.93, width: "100%", backgroundColor: "blue" }}>
-          <Text>MY PROFILE</Text>
-        </View>
-      </View>
-    ) : (
-      <View style={{ flex: 1 }}>
-        <ProfileHeader {...this.props.route.params}></ProfileHeader>
+            <Text>{myProfile.user.email}</Text>
+            <TouchableOpacity
+              onPress={() => this.props.dispatch({ type: SIGN_OUT })}
+            >
+              <Text style={{ fontWeight: "bold", color: "grey" }}>
+                Sign Out
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {this.state.items ? (
+          <ProfileHeader {...this.props.route.params}></ProfileHeader>
+        ) : (
+          <ProfileHeader
+            item={{
+              userId: myProfile.user,
+              locationFrom: myProfile.travel?.locationFrom,
+              locationTo: myProfile.travel?.locationTo,
+              departure: myProfile.travel?.departure
+            }}
+          ></ProfileHeader>
+        )}
         {this.renderItems()}
       </View>
     );
   }
 }
 
-export default connect()(ProfileScreen);
+function mapStateToProps({ user }) {
+  return { user };
+}
+
+export default connect(mapStateToProps)(ProfileScreen);
 
 const styles = StyleSheet.create({
-  noItem: {
+  item: {
     flex: 0.8,
     justifyContent: "center",
     alignItems: "center",
-    borderTopWidth: 0.3,
-    backgroundColor: "white"
+    borderTopWidth: 0.3
   }
 });

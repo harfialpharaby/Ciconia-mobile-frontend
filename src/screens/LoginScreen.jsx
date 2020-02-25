@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert
+  Alert,
+  ToastAndroid
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
@@ -17,11 +18,17 @@ import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { userLogin } from "../store/actions/user";
 
 export default function LoginScreen() {
-  const [email, setEmail] = React.useState("harfi@mail.com");
-  const [password, setPassword] = React.useState("123456");
-  const selector = useSelector(state => state.user);
+  const [email, setEmail] = useState("harfialpharaby@gmail.com");
+  const [password, setPassword] = useState("123456");
+  const { error } = useSelector(state => state.user);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (error) {
+      ToastAndroid.show(error, ToastAndroid.SHORT);
+    }
+  }, [error]);
 
   const validateInput = () => {
     if (!email.length || !password.length) {

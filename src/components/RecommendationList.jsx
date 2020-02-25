@@ -6,11 +6,11 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity
 } from "react-native";
-import { Feather, AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 
 export default function RecommendationList(props) {
-  const { item } = props;
+  const { item, index, remove } = props;
 
   const renderLeftActions = (progress, dragX) => {
     const trans = dragX.interpolate({
@@ -22,12 +22,15 @@ export default function RecommendationList(props) {
       <TouchableOpacity
         style={{
           flexDirection: "row",
+          justifyContent: "flex-start",
           alignItems: "center",
-          paddingHorizontal: 50,
+          paddingRight: 100,
+          paddingLeft: 10,
           backgroundColor: "red"
         }}
+        onPress={() => remove(index)}
       >
-        <Feather name="trash-2" size={80} color="white" />
+        <Feather name="trash-2" size={30} color="white" />
       </TouchableOpacity>
     );
   };

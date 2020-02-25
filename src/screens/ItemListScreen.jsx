@@ -14,7 +14,6 @@ export default function CartListScreen(props) {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-
     dispatch(fetchItemList()).then(() => setRefreshing(false));
   }, [refreshing]);
 
@@ -23,7 +22,7 @@ export default function CartListScreen(props) {
   }, []);
 
   return isLoading ? (
-    <SplashScreen></SplashScreen>
+    <SplashScreen text="Fetching Items..."></SplashScreen>
   ) : !items.length ? (
     <View style={styles.container}>
       <Text>No Items Yet</Text>

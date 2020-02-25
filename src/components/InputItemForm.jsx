@@ -77,7 +77,8 @@ export default function AddModal(props) {
       allowsEditing: true,
       base64: true,
       aspect: [4, 3],
-      quality: 1
+      quality: 1,
+      exif: true
     });
 
     if (!image.cancelled) {

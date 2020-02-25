@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     width,
     height: 100,
     flexDirection: "row",
-    marginBottom: 15
+    marginBottom: 5
   },
   location: {
     flex: 0.3,

@@ -1,5 +1,12 @@
 import React, { useEffect, useCallback, useState } from "react";
-import { StyleSheet, Text, View, FlatList, RefreshControl } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  RefreshControl,
+  Image
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Constants from "expo-constants";
 
@@ -23,18 +30,36 @@ export default function TravellerListScreen(props) {
   }, []);
 
   return isLoading ? (
-    <SplashScreen></SplashScreen>
+    <SplashScreen text="Fetching Travelers..."></SplashScreen>
   ) : !travels.length ? (
     <View style={styles.container}>
       <Text>No Travelers Yet</Text>
     </View>
   ) : (
     <View style={styles.container}>
-      <View style={{ marginTop: Constants.statusBarHeight }}></View>
+      <View
+        style={{
+          flex: 0.1,
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "white",
+          paddingTop: Constants.statusBarHeight,
+          borderBottomWidth: 0.3
+        }}
+      >
+        <Image
+          source={require("../../assets/transparent.png")}
+          style={{ width: 150, height: 150 }}
+          resizeMode="contain"
+        ></Image>
+      </View>
       <FlatList
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        contentContainerStyle={{ marginTop: 5 }}
+        style={{ flex: 0.9 }}
         data={travels}
         renderItem={({ item }) => <TravelCard item={item}></TravelCard>}
         keyExtractor={item => item._id}

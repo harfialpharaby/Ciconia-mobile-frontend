@@ -1,7 +1,33 @@
 import { AsyncStorage } from "react-native";
-import { AUTH_START, AUTH_FAIL, SIGN_IN, SIGN_OUT } from "../actionTypes";
+import {
+  AUTH_START,
+  AUTH_FAIL,
+  SIGN_IN,
+  SIGN_OUT,
+  MY_PROFILE,
+  LOADING_MY_PROFILE
+} from "../actionTypes";
 
 const BASE_URL = "http://35.197.153.118";
+
+export function fetchMyProfile() {
+  return async dispatch => {
+    dispatch({ type: LOADING_MY_PROFILE });
+    const token = await AsyncStorage.getItem("userToken");
+    const response = await fetch(`${BASE_URL}/users`, {
+      headers: {
+        "Content-Type": "application/json",
+        token
+      }
+    });
+    if (response.ok) {
+      const myProfile = await response.json();
+      dispatch({ type: MY_PROFILE, myProfile });
+    } else {
+      dispatch({ type: MY_PROFILE, myProfile: { travel: null } });
+    }
+  };
+}
 
 export function userRegister({ email, name, password }) {
   return async dispatch => {
@@ -19,9 +45,14 @@ export function userRegister({ email, name, password }) {
       });
       if (response.ok) {
         let json = await response.json();
+        await AsyncStorage.setItem("userToken", json.token);
+        AsyncStorage.setItem("name", json.name);
+        AsyncStorage.setItem("point", json.point.toString());
+
+        dispatch(fetchMyProfile());
         dispatch({ type: SIGN_IN, token: json.token });
       } else {
-        dispatch({ type: AUTH_FAIL });
+        dispatch({ type: AUTH_FAIL, error: "Email already registered" });
       }
     } catch (error) {
       dispatch({ type: AUTH_FAIL, error });
@@ -43,12 +74,14 @@ export function userLogin({ email, password }) {
         },
         body: JSON.stringify({ email, password })
       });
+
       if (response.ok) {
         let json = await response.json();
         AsyncStorage.setItem("userToken", json.token);
         AsyncStorage.setItem("name", json.name);
         AsyncStorage.setItem("point", json.point.toString());
 
+        dispatch(fetchMyProfile());
         dispatch({ type: SIGN_IN, token: json.token });
       } else {
         dispatch({ type: AUTH_FAIL });
@@ -60,15 +93,10 @@ export function userLogin({ email, password }) {
 }
 
 export function signOut() {
-  AsyncStorage.removeItem("userToken");
-  dispatch({ type: SIGN_OUT });
-}
-
-export async function signUp(data) {
-  // In a production app, we need to send user data to server and get a token
-  // We will also need to handle errors if sign up failed
-  // After getting token, we need to persist the token using `AsyncStorage`
-  // In the example, we'll use a dummy token
-
-  dispatch({ type: SIGN_IN, token: "dummy-auth-token" });
+  return async dispatch => {
+    AsyncStorage.removeItem("userToken");
+    AsyncStorage.removeItem("name");
+    AsyncStorage.removeItem("point");
+    dispatch({ type: SIGN_OUT });
+  };
 }

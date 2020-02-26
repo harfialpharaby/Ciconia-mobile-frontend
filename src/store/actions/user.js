@@ -7,8 +7,7 @@ import {
   MY_PROFILE,
   LOADING_MY_PROFILE
 } from "../actionTypes";
-
-const BASE_URL = "http://35.197.153.118";
+import { BASE_URL } from "../../url";
 
 export function fetchMyProfile() {
   return async dispatch => {
@@ -46,8 +45,8 @@ export function userRegister({ email, name, password }) {
       if (response.ok) {
         let json = await response.json();
         await AsyncStorage.setItem("userToken", json.token);
-        AsyncStorage.setItem("name", json.name);
-        AsyncStorage.setItem("point", json.point.toString());
+        await AsyncStorage.setItem("email", json.email);
+        await AsyncStorage.setItem("point", json.point.toString());
 
         dispatch(fetchMyProfile());
         dispatch({ type: SIGN_IN, token: json.token });
@@ -77,9 +76,9 @@ export function userLogin({ email, password }) {
 
       if (response.ok) {
         let json = await response.json();
-        AsyncStorage.setItem("userToken", json.token);
-        AsyncStorage.setItem("name", json.name);
-        AsyncStorage.setItem("point", json.point.toString());
+        await AsyncStorage.setItem("userToken", json.token);
+        await AsyncStorage.setItem("email", json.email);
+        await AsyncStorage.setItem("point", json.point.toString());
 
         dispatch(fetchMyProfile());
         dispatch({ type: SIGN_IN, token: json.token });
@@ -94,9 +93,10 @@ export function userLogin({ email, password }) {
 
 export function signOut() {
   return async dispatch => {
-    AsyncStorage.removeItem("userToken");
-    AsyncStorage.removeItem("name");
-    AsyncStorage.removeItem("point");
+    await AsyncStorage.clear();
+    // AsyncStorage.removeItem("userToken");
+    // AsyncStorage.removeItem("name");
+    // AsyncStorage.removeItem("point");
     dispatch({ type: SIGN_OUT });
   };
 }

@@ -6,8 +6,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { RESTORE_TOKEN } from "../store/actionTypes";
 import SplashScreen from "../screens/SplashScreen";
-import PrivateNavigation from "./PrivateNavigation";
 import AuthNavigation from "./AuthNavigation";
+import PrivateNavigation from "./PrivateNavigation";
 
 const Stack = createStackNavigator();
 

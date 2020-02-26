@@ -2,11 +2,9 @@ import { AsyncStorage } from "react-native";
 import {
   FETCH_CART_START,
   FETCH_CART_SUCCESS,
-  FETCH_CART_FAIL,
-  ADD_CART
+  FETCH_CART_FAIL
 } from "../actionTypes";
-
-const BASE_URL = "http://35.197.153.118";
+import { BASE_URL } from "../../url";
 
 export function fetchCartList() {
   return async dispatch => {
@@ -59,7 +57,6 @@ export function addCart({ travelId, itemId, quantity, status, fixPrice }) {
       });
       if (response.ok) {
         const newCart = await response.json();
-        console.log(newCart);
       } else {
         console.log("GAGAL");
       }

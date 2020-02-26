@@ -41,7 +41,7 @@ export default function ItemDetail(props) {
     if (item.status === "travel") {
       dispatch(
         addCart({
-          travelId: item.ownerId._id,
+          travelId: item.travelId,
           itemId: item._id,
           quantity: parseInt(quantity) || 1,
           status: "open",
@@ -128,78 +128,6 @@ export default function ItemDetail(props) {
         modalVisible={modalVisible}
         processTransaction={processTransaction}
       ></ChangeNumberModal>
-      {/* <Modal animationType="none" transparent={true} visible={modalVisible}>
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <View
-            style={{
-              flex: 0.3,
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "black"
-            }}
-          >
-            <Text style={{ flex: 0.2, color: "white" }}>
-              {status.confirmText}
-            </Text>
-            <TextInput
-              value={quantity}
-              onChangeText={text => setQuantity(text)}
-              autoFocus={true}
-              style={{
-                textAlign: "center",
-                flex: 0.3,
-                borderBottomWidth: 1,
-                borderBottomColor: "white",
-                color: "white",
-                width: 100
-              }}
-              keyboardType="phone-pad"
-            ></TextInput>
-            <View
-              style={{
-                flex: 0.3,
-                alignItems: "flex-end",
-                flexDirection: "row"
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  flex: 0.5
-                }}
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontWeight: "bold",
-                    color: "#e74c3c"
-                  }}
-                >
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  flex: 0.5
-                }}
-                onPress={processTransaction}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontWeight: "bold",
-                    color: "#2ecc71"
-                  }}
-                >
-                  Save
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal> */}
     </View>
   );
 }

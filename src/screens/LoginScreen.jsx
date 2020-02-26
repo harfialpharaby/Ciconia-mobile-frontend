@@ -18,8 +18,8 @@ import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { userLogin } from "../store/actions/user";
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState("harfialpharaby@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { error } = useSelector(state => state.user);
   const dispatch = useDispatch();
   const navigation = useNavigation();

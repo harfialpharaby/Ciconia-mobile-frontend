@@ -19,7 +19,13 @@ export default function ChangeNumberModal(props) {
 
   return (
     <Modal animationType="none" transparent={true} visible={modalVisible}>
-      <View style={{ flex: 1, justifyContent: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          backgroundColor: "rgba(255, 255, 255, 0.8)"
+        }}
+      >
         <View style={styles.background}>
           <Text style={{ flex: 0.2, color: "white" }}>{confirmText}</Text>
           <TextInput

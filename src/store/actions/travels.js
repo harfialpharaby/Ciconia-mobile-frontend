@@ -3,12 +3,10 @@ import {
   FETCH_TRAVEL_START,
   FETCH_TRAVEL_SUCCESS,
   FETCH_TRAVEL_FAIL,
-  ADD_TRAVEL_SUCCESS,
-  MY_PROFILE
+  ADD_TRAVEL_SUCCESS
 } from "../actionTypes";
 import { addBulkItems } from "./items";
-
-const BASE_URL = "http://35.197.153.118";
+import { BASE_URL } from "../../url";
 
 export function fetchTravelList() {
   return async dispatch => {
@@ -49,7 +47,7 @@ export function addTravel({ destination, departure, departureDate, items }) {
       if (response.ok) {
         let newTravel = await response.json();
         dispatch({ type: ADD_TRAVEL_SUCCESS, newTravel });
-        dispatch({ type: MY_PROFILE, myProfile: { travel: newTravel } });
+        // dispatch({ type: MY_PROFILE, myProfile: { travel: newTravel } });
         dispatch(addBulkItems(items, "travel"));
       } else {
         console.log("GAGAL");

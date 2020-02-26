@@ -66,6 +66,7 @@ class NotificationScreen extends Component {
   fetchOpenNotification = async () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
+      const userEmail = await AsyncStorage.getItem("email");
       const response = await fetch(`${BASE_URL}/carts/user`, {
         headers: {
           token: userToken
@@ -75,8 +76,23 @@ class NotificationScreen extends Component {
         const openCarts = await response.json();
         const normalizedCarts = [];
         for (const key in openCarts) {
-          normalizedCarts.push(...openCarts[key]);
+          normalizedCarts.push(
+            ...openCarts[key].filter(cart => {
+              if (cart.status === "pending verification") {
+                if (cart.buyerId.email === userEmail) {
+                  return false;
+                }
+                return true;
+              } else {
+                return true;
+              }
+            })
+          );
         }
+
+        this.setState({
+          notifications: [...this.state.notifications, ...normalizedCarts]
+        });
       }
     } catch (error) {
       console.log(error);
@@ -86,6 +102,7 @@ class NotificationScreen extends Component {
   fetchPendingVerification = async () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
+      const userEmail = await AsyncStorage.getItem("email");
       const response = await fetch(`${BASE_URL}/carts/travel`, {
         headers: {
           token: userToken
@@ -94,7 +111,12 @@ class NotificationScreen extends Component {
       if (response.ok) {
         const pendingVerify = await response.json();
         this.setState({
-          notifications: [...pendingVerify, ...this.state.notifications]
+          notifications: [
+            ...pendingVerify,
+            ...this.state.notifications.filter(
+              notif => notif.buyerId.email !== userEmail
+            )
+          ]
         });
       }
     } catch (error) {

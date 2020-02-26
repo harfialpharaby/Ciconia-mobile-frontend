@@ -302,7 +302,7 @@ class AddTripScreen extends Component {
 }
 
 function mapStateToProps({ user }) {
-  return { myTravel: user.myProfile.travel };
+  return { myTravel: user.myProfile?.travel };
 }
 
 export default connect(mapStateToProps)(AddTripScreen);

@@ -42,10 +42,14 @@ export default function CartModal(props) {
   };
 
   useEffect(() => {
-    for (let i = 0; i < statuses.length; i++) {
-      if (statuses[i].name === item.status) {
-        setDoneIndex(i);
-        break;
+    if (item.status === "completed") {
+      setDoneIndex(6);
+    } else {
+      for (let i = 0; i < statuses.length; i++) {
+        if (statuses[i].name === item.status) {
+          setDoneIndex(i);
+          break;
+        }
       }
     }
 
@@ -160,15 +164,16 @@ export default function CartModal(props) {
         photoLocation[0].country.trim().toLowerCase()
       ) {
         changeStatusTo(status);
+      } else {
+        ToastAndroid.show(
+          "Confirmation rejected by system due to lack of data you provide",
+          ToastAndroid.LONG
+        );
       }
     }
-    ToastAndroid.show(
-      "Confirmation rejected by system due to lack of data you provide",
-      ToastAndroid.LONG
-    );
   };
 
-  const verifyWithInvoice = async status => {
+  const verifyWithInvoice = async newStatus => {
     try {
       const token = await AsyncStorage.getItem("userToken");
       const response = await fetch(`${BASE_URL}/payment/${item.invoiceId}`, {
@@ -181,7 +186,7 @@ export default function CartModal(props) {
       if (response.ok) {
         const { invoice_url, status } = await response.json();
         if (status === "SETTLED") {
-          changeStatusTo("pending delivery");
+          changeStatusTo(newStatus);
           ToastAndroid.show("Your payment is confirmed", ToastAndroid.LONG);
         } else {
           Alert.alert(
@@ -272,13 +277,16 @@ export default function CartModal(props) {
   const actions = () => {
     switch (item.status) {
       case "open":
-        withPayment("pending purchase");
+        changeStatusTo("pending purchase");
         break;
       case "offered":
-        setModalVisible(true);
+        changeStatusTo("pending purchase");
+        // setModalVisible(true);
         break;
       case "pending purchase":
-        verifyWithInvoice("pending verification");
+        !item.invoiceId
+          ? withPayment("pending purchase")
+          : verifyWithInvoice("pending verification");
         break;
       case "pending verification":
         verifyWithCamera("pending delivery");
@@ -330,7 +338,7 @@ export default function CartModal(props) {
           )}
           <ChangeNumberModal
             confirmText={
-              item.status === "travel"
+              item.status === "open"
                 ? "How many do you want?"
                 : "How much you offer?"
             }
@@ -345,7 +353,11 @@ export default function CartModal(props) {
 }
 
 const styles = StyleSheet.create({
-  background: { flex: 1, alignItems: "center", justifyContent: "center" },
+  background: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
   foreground: {
     flex: 0.8,
     width: "95%",

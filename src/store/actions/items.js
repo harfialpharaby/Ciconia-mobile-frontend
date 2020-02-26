@@ -5,8 +5,7 @@ import {
   ADD_ITEM_SUCCESS
 } from "../actionTypes";
 import { AsyncStorage } from "react-native";
-
-const BASE_URL = "http://35.197.153.118";
+import { BASE_URL } from "../../url";
 
 export function fetchItemList() {
   return async dispatch => {

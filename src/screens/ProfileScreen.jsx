@@ -42,7 +42,7 @@ class ProfileScreen extends Component {
       (this.props.route.name === "TravelerScreen" &&
         !this.state.items?.length) ||
       (this.props.route.name === "Profile" &&
-        !this.props.user.myProfile?.items.length)
+        !this.props.user.myProfile?.items?.length)
     ) {
       return (
         <View style={styles.item}>
@@ -115,7 +115,7 @@ class ProfileScreen extends Component {
               width: "95%"
             }}
           >
-            <Text>{myProfile.user.email}</Text>
+            <Text>{myProfile?.user?.email}</Text>
             <TouchableOpacity onPress={this.confirmSignOut}>
               <Text style={{ fontWeight: "bold", color: "grey" }}>
                 Sign Out

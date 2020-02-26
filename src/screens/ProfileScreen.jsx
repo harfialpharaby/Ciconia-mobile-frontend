@@ -102,7 +102,6 @@ class ProfileScreen extends Component {
 
   render() {
     const { myProfile } = this.props.user;
-    console.log(this.props.user);
 
     return (
       <View style={{ flex: 1, paddingTop: Constants.statusBarHeight }}>

@@ -20,6 +20,8 @@ import { userLogin } from "../store/actions/user";
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showLandingScreen, setShowLandingScreen] = useState(true);
+
   const { error } = useSelector(state => state.user);
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -38,18 +40,54 @@ export default function LoginScreen() {
     }
   };
 
-  return (
+  return showLandingScreen ? (
+    <TouchableWithoutFeedback
+      style={{ flex: 1 }}
+      onPress={() => setShowLandingScreen(false)}
+    >
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          backgroundColor: "#00adee"
+        }}
+      >
+        <Image
+          source={require("../../assets/logowelcome.png")}
+          style={{ flex: 0.25 }}
+          resizeMode="contain"
+        ></Image>
+        <View style={{ flex: 0.25, alignItems: "center", marginTop: 10 }}>
+          <Text
+            style={{
+              color: "white",
+              fontWeight: "bold",
+              fontSize: 40,
+              letterSpacing: 1
+            }}
+          >
+            LETS STARTED
+          </Text>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 17,
+              textAlign: "center",
+              paddingHorizontal: 35
+            }}
+          >
+            This application is useful for you shopaholic, so you can get items
+            easily and affordable shipping cost and for you travelers, so you
+            can and do business at a time
+          </Text>
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
+  ) : (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <View
-          style={{
-            flex: 0.95,
-            width: "100%",
-            paddingBottom: 100,
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
+        <View style={styles.logoBg}>
           <View>
             <Image
               source={require("../../assets/transparent.png")}
@@ -129,5 +167,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 50,
     height: 40
+  },
+  logoBg: {
+    flex: 0.95,
+    width: "100%",
+    paddingBottom: 100,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });

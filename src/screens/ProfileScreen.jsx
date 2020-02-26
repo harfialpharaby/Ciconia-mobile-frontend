@@ -5,13 +5,14 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
-  RefreshControl
+  RefreshControl,
+  Alert
 } from "react-native";
 import { connect } from "react-redux";
 import Constants from "expo-constants";
 import { FontAwesome } from "@expo/vector-icons";
 
-import { SIGN_OUT } from "../store/actionTypes";
+import { signOut } from "../store/actions/user";
 import { fetchMyProfile } from "../store/actions/user";
 import ProfileHeader from "../components/ProfileHeader";
 import ItemCard from "../components/ItemCard";
@@ -83,6 +84,21 @@ class ProfileScreen extends Component {
     }
   };
 
+  confirmSignOut = () => {
+    Alert.alert(
+      "Sign Out",
+      "Are you sure want to sign out?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { text: "Sign Out", onPress: () => this.props.dispatch(signOut()) }
+      ],
+      { cancelable: true }
+    );
+  };
+
   render() {
     const { myProfile } = this.props.user;
 
@@ -100,9 +116,7 @@ class ProfileScreen extends Component {
             }}
           >
             <Text>{myProfile.user.email}</Text>
-            <TouchableOpacity
-              onPress={() => this.props.dispatch({ type: SIGN_OUT })}
-            >
+            <TouchableOpacity onPress={this.confirmSignOut}>
               <Text style={{ fontWeight: "bold", color: "grey" }}>
                 Sign Out
               </Text>

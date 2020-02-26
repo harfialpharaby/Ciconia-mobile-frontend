@@ -1,7 +1,8 @@
 import {
   FETCH_CART_START,
   FETCH_CART_SUCCESS,
-  FETCH_CART_FAIL
+  FETCH_CART_FAIL,
+  ADD_CART
 } from "../actionTypes";
 
 const initialState = {
@@ -30,6 +31,12 @@ export default function travelReducer(state = initialState, action) {
         ...state,
         isLoading: false,
         error: action.error
+      };
+    case ADD_CART:
+      return {
+        ...state,
+        carts: [...state.carts, action.newCart],
+        error: null
       };
     default:
       return state;

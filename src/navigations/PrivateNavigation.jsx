@@ -6,11 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { fetchMyProfile } from "../store/actions/user";
 import SplashScreen from "../screens/SplashScreen";
-import ItemList from "../screens/ItemListScreen";
 import CartListScreen from "../screens/CartListScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import AddNavigation from "./AddNavigation";
 import TravelNavigation from "./TravelNavigation";
+import ItemNavigation from "./ItemNavigation";
 
 export default function PrivateNavigation(props) {
   const Tab = createBottomTabNavigator();
@@ -42,14 +42,14 @@ export default function PrivateNavigation(props) {
         component={TravelNavigation}
       />
       <Tab.Screen
-        name="ItemList"
+        name="ItemNavigation"
         options={{
           tabBarLabel: "Item",
           tabBarIcon: ({ color, size }) => (
             <Feather name="search" color={color} size={size} />
           )
         }}
-        component={ItemList}
+        component={ItemNavigation}
       />
       <Tab.Screen
         name="Add"

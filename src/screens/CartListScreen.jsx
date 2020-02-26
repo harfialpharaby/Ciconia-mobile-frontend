@@ -13,6 +13,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Constants from "expo-constants";
 
 import { fetchCartList } from "../store/actions/carts";
+import { fetchMyProfile } from "../store/actions/user";
 import SplashScreen from "./SplashScreen";
 import CartList from "../components/CartList";
 import CartModal from "../components/CartModal";
@@ -49,35 +50,35 @@ export default function CartListScreen(props) {
   ];
   const [refreshing, setRefreshing] = useState(false);
   const [statusShown, setStatusShown] = useState("");
-  const { isLoading, carts, error } = useSelector(state => state.carts);
+  const { isLoading, myProfile, error } = useSelector(state => state.user);
   const [showCarts, setShowCarts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showDetail, setShowDetail] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchCartList());
+    // dispatch(fetchCartList());
     setStatusShown("all");
     setShowModal(false);
   }, []);
 
   useEffect(() => {
-    setShowCarts(carts);
+    setShowCarts(myProfile.carts.filter(cart => cart.status !== "completed"));
   }, [isLoading]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setStatusShown("all");
-    dispatch(fetchCartList()).then(() => setRefreshing(false));
+    dispatch(fetchMyProfile()).then(() => setRefreshing(false));
   }, [refreshing]);
 
   const filterStatus = status => {
-    if (status.key === "all" || !carts) {
-      setShowCarts(carts);
+    if (status.key === "all" || !myProfile.carts) {
+      setShowCarts(myProfile.carts.filter(cart => cart.status !== "completed"));
     } else {
-      setShowCarts(carts.filter(cart => cart.status === status.name));
+      setShowCarts(myProfile.carts.filter(cart => cart.status === status.name));
     }
-    setStatusShown(status.name);
+    setStatusShown(status.key);
   };
 
   const renderStatus = () => {
@@ -144,7 +145,7 @@ export default function CartListScreen(props) {
             }
             numColumns={2}
             key={2}
-            data={showCarts}
+            data={showCarts.reverse()}
             renderItem={({ item }) => (
               <CartList
                 item={item}
@@ -164,6 +165,7 @@ export default function CartListScreen(props) {
           showModal={showModal}
           setShowModal={setShowModal}
           statuses={statuses.slice(1)}
+          isWatcher={true}
         ></CartModal>
       )}
     </View>

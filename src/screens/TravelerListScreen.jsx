@@ -5,9 +5,12 @@ import {
   View,
   FlatList,
   RefreshControl,
-  Image
+  Image,
+  TouchableOpacity
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Constants from "expo-constants";
 
 import { fetchTravelList } from "../store/actions/travels";
@@ -18,6 +21,7 @@ export default function TravellerListScreen(props) {
   const [refreshing, setRefreshing] = useState(false);
   const { isLoading, travels, error } = useSelector(state => state.travels);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -41,18 +45,27 @@ export default function TravellerListScreen(props) {
         style={{
           flex: 0.1,
           width: "100%",
-          justifyContent: "center",
+          flexDirection: "row",
+          justifyContent: "space-between",
           alignItems: "center",
           backgroundColor: "white",
           paddingTop: Constants.statusBarHeight,
-          borderBottomWidth: 0.3
+          borderBottomWidth: 0.3,
+          paddingHorizontal: 15
         }}
       >
         <Image
-          source={require("../../assets/transparent.png")}
-          style={{ width: 150, height: 150 }}
+          source={require("../../assets/tulisanAsset.png")}
+          style={{ width: 70, height: 70 }}
           resizeMode="contain"
         ></Image>
+        <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
+          <MaterialCommunityIcons
+            name="bell-outline"
+            size={22}
+            color="black"
+          ></MaterialCommunityIcons>
+        </TouchableOpacity>
       </View>
       <FlatList
         refreshControl={

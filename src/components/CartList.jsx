@@ -15,7 +15,7 @@ const statusColor = {
   offered: "#e67e22",
   "pending purchase": "#f1c40f",
   "pending delivery": "#8e44ad",
-  verification: "#2980b9",
+  "pending verification": "#2980b9",
   completed: "#2ecc71"
 };
 

@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import TravelerList from "../screens/TravelerListScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import NotificationScreen from "../screens/NotificationScreen";
 
 export default function PrivateNavigation(props) {
   const Stack = createStackNavigator();
@@ -21,6 +22,7 @@ export default function PrivateNavigation(props) {
         })}
         component={ProfileScreen}
       />
+      <Stack.Screen name="Notification" component={NotificationScreen} />
     </Stack.Navigator>
   );
 }

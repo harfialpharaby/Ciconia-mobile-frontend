@@ -79,15 +79,6 @@ export default function TravelCard(props) {
               {Moment(item.departure).format("dddd, MMMM Do YYYY")}
             </Text>
           </View>
-          {/* <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-            <Text style={{ fontWeight: "normal" }}>Hi, I am </Text>
-            {item.userId.name}
-          </Text> */}
-
-          {/* <Text>
-            See my shopping list in{" "}
-            <Text style={{ fontWeight: "bold" }}>{item.locationFrom}</Text>
-          </Text> */}
         </View>
       </TouchableOpacity>
     </View>

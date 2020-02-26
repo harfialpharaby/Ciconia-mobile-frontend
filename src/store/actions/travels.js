@@ -6,7 +6,6 @@ import {
   ADD_TRAVEL_SUCCESS,
   MY_PROFILE
 } from "../actionTypes";
-import { fetchMyProfile } from "./user";
 import { addBulkItems } from "./items";
 
 const BASE_URL = "http://35.197.153.118";
@@ -33,26 +32,6 @@ export function addTravel({ destination, departure, departureDate, items }) {
       const locationFrom = `${departure.city.trim()}, ${departure.country.trim()}`;
       const locationTo = `${destination.city.trim()}, ${destination.country.trim()}`;
       const token = await AsyncStorage.getItem("userToken");
-      // let newItems = [];
-      // if (items.length) {
-      //   newItems = items.reduce(
-      //     (acc, { quantity, image, name, country, city, price }) => {
-      //       let imageUris = image.uri.split("/");
-      //       acc.push({
-      //         name,
-      //         price: parseInt(price),
-      //         quantity,
-      //         location: `${city}, ${country}`,
-      //         imageName: imageUris[imageUris.length - 1],
-      //         base64: image.base64,
-      //         status: "travel"
-      //       });
-      //       return acc;
-      //     },
-      //     []
-      //   );
-      // }
-
       const response = await fetch(`${BASE_URL}/travels`, {
         method: "POST",
         headers: {

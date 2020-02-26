@@ -63,7 +63,7 @@ export default function CartListScreen(props) {
   }, []);
 
   useEffect(() => {
-    setShowCarts(myProfile.carts.filter(cart => cart.status !== "completed"));
+    setShowCarts(myProfile?.carts?.filter(cart => cart.status !== "completed"));
   }, [isLoading]);
 
   const onRefresh = useCallback(() => {
@@ -74,9 +74,13 @@ export default function CartListScreen(props) {
 
   const filterStatus = status => {
     if (status.key === "all" || !myProfile.carts) {
-      setShowCarts(myProfile.carts.filter(cart => cart.status !== "completed"));
+      setShowCarts(
+        myProfile?.carts?.filter(cart => cart.status !== "completed")
+      );
     } else {
-      setShowCarts(myProfile.carts.filter(cart => cart.status === status.name));
+      setShowCarts(
+        myProfile?.carts?.filter(cart => cart.status === status.name)
+      );
     }
     setStatusShown(status.key);
   };

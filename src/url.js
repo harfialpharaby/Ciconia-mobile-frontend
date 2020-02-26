@@ -1,4 +1,5 @@
 export const BASE_URL = "http://35.192.115.213";
+// export const BASE_URL = "http://35.197.153.118";
 
 /* 
 USERS: 
